@@ -4,7 +4,7 @@ Laravel + **Vue 3 (Composition API)** + **Inertia v3** + **Reka UI** + **Tailwin
 
 > **Stack scope:** This plugin targets the Vue 3 + Inertia v3 + Reka UI stack. For the Livewire 4 + Flux Pro v2 variant, see the sibling plugin [`laravel-livewire-superpowers`](https://github.com/altraWeb/laravel-livewire-superpowers) (v3.0.0+).
 >
-> **Pre-1.0 release:** Currently shipping `v1.0.0-alpha.3` (Phase C: skill sub-section swaps). Functional today for Vue 3 + Inertia + Reka UI projects. Remaining adaptation (hook repurpose in Phase D) lands before v1.0.0 stable cut in Phase E.
+> **Pre-1.0 release:** Currently shipping `v1.0.0-alpha.4` (Phase D: hook repurpose). Functional today for Vue 3 + Inertia + Reka UI projects. Remaining adaptation (release polish in Phase E) lands before v1.0.0 stable cut.
 
 📍 **[Roadmap](docs/ROADMAP.md)** — see what's planned + tracked GitHub issues
 📊 **[Versions](#versions)** — phase-by-phase release history
@@ -72,8 +72,8 @@ See [`docs/agents.md`](docs/agents.md) for the full agent reference.
 - **stale-branch-sweep** — SessionStart hook that lists local branches whose upstream is gone (post-merge cleanup suggestion).
 - **master-roadmap-drift-detector** — PostToolUse hook on `git commit` touching plan-docs that warns when master-roadmap entry is out of sync.
 - **pilot-2-contract-enforcer** — PostToolUse hook on `git commit`/`git push` that warns on open T3/T4 Pilot 2.0 Tactic Tracking markers.
-- **vendor-source-preflight** — *(Phase D: repurpose planned for inertia-vendor-preflight)* PreToolUse hook on `Edit`/`Write` of blade files; currently triggers on Flux/Livewire syntax.
-- **lang-key-existence-preflight** — PreToolUse hook on `Edit`/`Write` of files with `__()` or `@lang()` that verifies each key exists in `lang/`.
+- **inertia-vendor-preflight** — *(Phase D)* PreToolUse hook on `Edit`/`Write` of `.vue` files; detects Reka UI imports + Inertia helpers and surfaces `node_modules/reka-ui/dist/`, `node_modules/@inertiajs/vue3/dist/`, and `vendor/inertiajs/inertia-laravel/src/` as canonical source references.
+- **lang-key-existence-preflight** — PreToolUse hook on `Edit`/`Write` of `.blade.php` and `.vue` files with `__()` or `@lang()` that verifies each key exists in `lang/`.
 - **vue-setinterval-cleanup** — *(Phase B)* PreToolUse hook on `Edit`/`Write` of `.vue` files; warns when `setInterval` is used without `onUnmounted` cleanup.
 - **vue-reactive-destructure** — *(Phase B)* PreToolUse hook on `Edit`/`Write` of `.vue` files; warns on `const { ... } = reactive(...)` destructure that loses reactivity.
 - **inertia-link-external-url** — *(Phase B)* PreToolUse hook on `Edit`/`Write` of `.vue` files; warns when Inertia `<Link>` is used with an external URL (silent 409).
@@ -109,7 +109,8 @@ Run the superpowers skill first for generic structure; run the laravel-vue-super
 
 ## Versions
 
-- **v1.0.0-alpha.3 (2026-05-17) — Phase C: Skill Sub-Section Swaps** *(current)* — Swapped Livewire-flavored sub-sections in 4 skills with Vue 3 + Inertia v3 + Reka UI equivalents: a11y skill rewritten to 3 manual patterns + Reka-handles section; code-review §9/§10 → Inertia+Vue/Reka UI checklists; debugging items #3/#8 → Inertia API / Vue 3 reactivity gotchas; TDD items #3/#8 → assertInertia matchers / Pest browser + Vue testing.
+- **v1.0.0-alpha.4 (2026-05-17) — Phase D: Hook Repurpose** *(current)* — Renamed `vendor-source-preflight` → `inertia-vendor-preflight` (Reka UI + Inertia detection in `.vue` files); broadened `lang-key-existence-preflight` to also fire on `.vue` files.
+- **v1.0.0-alpha.3 (2026-05-17) — Phase C: Skill Sub-Section Swaps** — Swapped Livewire-flavored sub-sections in 4 skills with Vue 3 + Inertia v3 + Reka UI equivalents: a11y skill rewritten to 3 manual patterns + Reka-handles section; code-review §9/§10 → Inertia+Vue/Reka UI checklists; debugging items #3/#8 → Inertia API / Vue 3 reactivity gotchas; TDD items #3/#8 → assertInertia matchers / Pest browser + Vue testing.
 - **v1.0.0-alpha.2 (2026-05-17) — Phase B: Specialists + Anti-Pattern Hooks** — Removed Livewire + Flux Pro specialist agents; added Reka UI, Inertia v3, and Vue 3 Composition API specialists; added 4 PreToolUse anti-pattern hooks for `.vue` / `.ts` files. First functional release for Vue 3 + Inertia v3 + Reka UI workloads.
 - **v1.0.0-alpha.1 (2026-05-17) — Phase A: Identity Rename** — Plugin renamed from Livewire clone → laravel-vue-superpowers. Config paths, slash commands, README, docs/banners rebranded for Vue 3 + Inertia v3 + Reka UI + Tailwind 4 + Pest 4 stack. No content adaptation yet — agents/skills/hooks still from Livewire source.
 

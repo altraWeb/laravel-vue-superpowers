@@ -24,7 +24,7 @@ hook_enabled:
   stale_branch_sweep: true
   master_roadmap_drift_detector: true
   pilot_2_contract_enforcer: true
-  vendor_source_preflight: true
+  inertia_vendor_preflight: true
   lang_key_existence_preflight: true
   vue_setinterval_cleanup: true
   vue_reactive_destructure: true

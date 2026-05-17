@@ -203,8 +203,8 @@ def test_get_pilot_2_contract_enforcer_default(cli):
     assert result.stdout.strip() == "true"
 
 
-def test_get_vendor_source_preflight_default(cli):
-    result = cli("get", "hook_enabled.vendor_source_preflight")
+def test_get_inertia_vendor_preflight_default(cli):
+    result = cli("get", "hook_enabled.inertia_vendor_preflight")
     assert result.returncode == 0, result.stderr
     assert result.stdout.strip() == "true"
 
