@@ -15,13 +15,13 @@ The adaptation work is scoped via a separate brainstorming session (see `docs/su
 
 ### To REMOVE
 - `agents/laravel-livewire-specialist.md`
-- `agents/laravel-flux-pro-specialist.md`
+- `agents/laravel-flux-pro-specialist.md` (no UI library in use — operator builds own Vue 3 + Tailwind 4 components)
 - All Livewire-specific Blade patterns in skills (`laravel-a11y-specialist`, `laravel-code-review`, `laravel-debugging`)
-- `hooks/vendor-source-preflight.sh` Flux/Livewire detection patterns
+- `hooks/vendor-source-preflight.sh` Flux/Livewire detection patterns (Vue stack has no equivalent vendor stub library; hook may be repurposed for Inertia component-resource lookups OR removed entirely — TBD per follow-up brainstorming)
 
 ### To REPLACE
 - `laravel-livewire-specialist` → `laravel-inertia-specialist` + `laravel-vue3-specialist`
-- `laravel-flux-pro-specialist` → (decision pending — operator builds own UI, may not need a UI specialist)
+- `laravel-flux-pro-specialist` → **REMOVE entirely** (operator builds own components with pure Tailwind 4; no UI-library specialist needed)
 - Livewire-flavored a11y patterns → Vue/Inertia patterns
 - Livewire code-review sub-checklists → Vue/Inertia sub-checklists
 
@@ -53,7 +53,7 @@ Default stack for `laravel-vue-superpowers`:
 - Inertia v2 (v3 in beta — opt-in)
 - Vue 3 + Composition API + `<script setup>` + TypeScript (Options API hard-banned)
 - Vite 6/7 + Tailwind CSS 4
-- UI: **shadcn-vue** (built on Reka UI) — like-for-like Flux Pro v2 replacement
+- UI: **pure Vue 3 + Tailwind CSS 4 utility-first** — NO UI library (operator builds own components). shadcn-vue / Reka UI / PrimeVue are explicitly NOT defaults; available as opt-in skill/preset only if added later.
 - Routing/Types: Wayfinder v1 default
 - DTOs: spatie/laravel-data + spatie/laravel-typescript-transformer
 - Testing: Pest 4 + Browser plugin (Playwright) — identical to Livewire variant
