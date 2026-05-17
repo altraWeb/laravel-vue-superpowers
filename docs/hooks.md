@@ -532,4 +532,147 @@ Run: `bash tests/test_lang_key_existence_preflight_hook.sh` from repo root.
 
 ---
 
-_**V3 Phase F hooks shipped.** See [ROADMAP.md](ROADMAP.md) for the broader V3 roadmap._
+### `vue-setinterval-cleanup`
+
+**Event:** `PreToolUse` on `Edit` AND `Write`.
+
+**What it does:** when the target file ends in `.vue` and the new content contains `setInterval(`, checks whether the content also contains an `onUnmounted(` or `onBeforeUnmount(` cleanup. If `setInterval` is present without a cleanup, emits an `additionalContext` warning with the canonical Vue 3 cleanup pattern.
+
+**Why:** `setInterval` without `clearInterval` in `onUnmounted` leaks across Inertia navigations. Inertia navigates without a full page reload — unmounted components (or layouts that persist via `defineOptions({ layout })`) can accumulate timer callbacks from previous pages, causing performance degradation and incorrect side effects. Verified anti-pattern in the `laravel-vue-superpowers` deep-research audit (Topic 6, #11).
+
+**Skip cases:**
+
+- `hook_enabled.vue_setinterval_cleanup: false` in config
+- File path does not end in `.vue`
+- Content has no `setInterval(` calls
+- Content already contains `onUnmounted(` or `onBeforeUnmount(` (heuristic — assumes cleanup is wired)
+- Malformed JSON input — silent
+
+**Configuration:**
+
+```yaml
+hook_enabled:
+  vue_setinterval_cleanup: true    # set to false to disable
+```
+
+**Failure mode:** non-blocking. Never blocks an edit. Malformed JSON or missing `jq` → silent exit 0. Detection is heuristic (grep-based, not AST-level — may miss the case where cleanup is in a separate `onUnmounted` block).
+
+**Test evidence:** ships with `tests/test_vue_setinterval_cleanup_hook.sh` — 5 scenarios:
+1. `.vue` with setInterval AND onUnmounted — silent ✅
+2. `.vue` with setInterval but NO onUnmounted — warns ✅
+3. `.vue` without setInterval — silent ✅
+4. Non-`.vue` file with setInterval — silent ✅
+5. Malformed JSON — silent ✅
+
+Run: `bash tests/test_vue_setinterval_cleanup_hook.sh` from repo root.
+
+---
+
+### `vue-reactive-destructure`
+
+**Event:** `PreToolUse` on `Edit` AND `Write`.
+
+**What it does:** when the target file ends in `.vue` and the new content contains a destructure pattern on a `reactive()` object without `toRefs()`, emits an `additionalContext` warning. Detects both direct destructure (`const { x } = reactive(...)`) and indirect destructure (`const state = reactive(...); const { x } = state`).
+
+**Why:** destructuring a `reactive()` object produces plain values — the destructured variables lose their reactive binding and won't trigger template updates when the reactive object changes. This is one of the most common silent bugs in Vue 3 projects. Verified anti-pattern in the audit (Topic 6, #1).
+
+**Skip cases:**
+
+- `hook_enabled.vue_reactive_destructure: false` in config
+- File path does not end in `.vue`
+- No `reactive()` destructure pattern detected
+- Content already contains `toRefs(` (canonical fix — assumed correct)
+- Malformed JSON input — silent
+
+**Configuration:**
+
+```yaml
+hook_enabled:
+  vue_reactive_destructure: true    # set to false to disable
+```
+
+**Failure mode:** non-blocking. Heuristic detection — may miss reactive destructure in complex multiline patterns. Never blocks an edit.
+
+**Test evidence:** ships with `tests/test_vue_reactive_destructure_hook.sh` — 5 scenarios:
+1. `.vue` with reactive destructure — warns ✅
+2. `.vue` with `toRefs` — silent ✅
+3. `.vue` without reactive destructure — silent ✅
+4. Non-`.vue` file — silent ✅
+5. Malformed JSON — silent ✅
+
+Run: `bash tests/test_vue_reactive_destructure_hook.sh` from repo root.
+
+---
+
+### `inertia-link-external-url`
+
+**Event:** `PreToolUse` on `Edit` AND `Write`.
+
+**What it does:** when the target file ends in `.vue` and the new content contains `<Link` (Inertia's Link component) with an `href` pointing to an external URL (`http://` or `https://`), emits an `additionalContext` warning explaining the 409 Conflict behavior and recommending `<a>` for external links.
+
+**Why:** Inertia's `<Link>` component issues an XHR fetch to the target URL, expecting an Inertia JSON response. External URLs return plain HTML or API responses — Inertia receives a non-Inertia response and throws a silent `409 Conflict`. The page appears unresponsive with no error message. Verified anti-pattern in the audit (Topic 6, #14).
+
+**Skip cases:**
+
+- `hook_enabled.inertia_link_external_url: false` in config
+- File path does not end in `.vue`
+- No `<Link` with external URL pattern detected
+- Malformed JSON input — silent
+
+**Configuration:**
+
+```yaml
+hook_enabled:
+  inertia_link_external_url: true    # set to false to disable
+```
+
+**Failure mode:** non-blocking. Detects only single/double-quoted `href` values starting with `http`. Dynamic `:href` bindings not detected (would require AST analysis). Never blocks an edit.
+
+**Test evidence:** ships with `tests/test_inertia_link_external_url_hook.sh` — 5 scenarios:
+1. `.vue` with `<Link>` and internal URL — silent ✅
+2. `.vue` with `<Link>` and external URL — warns ✅
+3. `.vue` without `<Link>` (plain `<a href="https://...">`) — silent ✅
+4. Non-`.vue` file — silent ✅
+5. Malformed JSON — silent ✅
+
+Run: `bash tests/test_inertia_link_external_url_hook.sh` from repo root.
+
+---
+
+### `inertia-hardcoded-route`
+
+**Event:** `PreToolUse` on `Edit` AND `Write`.
+
+**What it does:** when the target file ends in `.vue` or `.ts` AND `vendor/laravel/wayfinder/` exists (Wayfinder is installed), detects hardcoded route string literals in `router.visit()`, `router.post()`, `router.put()`, `router.patch()`, `router.delete()` calls. Emits an `additionalContext` warning recommending Wayfinder action helpers instead. When Wayfinder is NOT installed, exits silently — no false positives in non-Wayfinder projects.
+
+**Why:** hardcoded route strings (`router.visit('/posts/create')`) drift silently when routes are renamed. Wayfinder generates TypeScript action helpers that bind HTTP method + URL together, providing compile-time route type safety. In a Wayfinder project, hardcoded routes bypass this safety net entirely. Verified anti-pattern in the audit (Topic 3 + Topic 6, #13).
+
+**Skip cases:**
+
+- `hook_enabled.inertia_hardcoded_route: false` in config
+- File path does not end in `.vue` or `.ts`
+- `vendor/laravel/wayfinder/` does not exist (not a Wayfinder project)
+- No `router.*` call with hardcoded string literal detected
+- Malformed JSON input — silent
+
+**Configuration:**
+
+```yaml
+hook_enabled:
+  inertia_hardcoded_route: true    # set to false to disable
+```
+
+**Failure mode:** non-blocking. Wayfinder detection is filesystem-based from cwd — hook correctly silences itself in non-Wayfinder projects. Template literal routes (backtick strings) not detected. Never blocks an edit.
+
+**Test evidence:** ships with `tests/test_inertia_hardcoded_route_hook.sh` — 5 scenarios:
+1. `.vue` with Wayfinder action (no hardcoded route) — silent ✅
+2. `.vue` with hardcoded route when Wayfinder installed — warns ✅
+3. `.vue` with hardcoded route but Wayfinder NOT installed — silent ✅
+4. Non-`.vue`/`.ts` file — silent ✅
+5. Malformed JSON — silent ✅
+
+Run: `bash tests/test_inertia_hardcoded_route_hook.sh` from repo root.
+
+---
+
+_**V1 Phase B hooks shipped.** See [ROADMAP.md](ROADMAP.md) for the broader V1 roadmap._

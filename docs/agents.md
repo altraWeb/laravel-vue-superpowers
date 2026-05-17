@@ -16,25 +16,25 @@
 
 ---
 
-### `laravel-livewire-specialist`
+### `laravel-reka-ui-specialist`
 
-**Use when:** auditing a plan-phase or code snippet that touches Livewire 4 components, blade templates with `wire:*` directives, or Echo/broadcasting integration. Particularly valuable before implementation when a plan mentions a `$this->...()` method — the agent verifies API existence via reflection against the vendor source, catching fabricated methods (like the `$this->hasLoading()` case from Block 1H Phase 5) before they ship.
+**Use when:** about to write or edit a Vue component that uses Reka UI primitives (`reka-ui` package — the unstyled, accessible primitives that ship with `laravel/vue-starter-kit`). Particularly valuable when composing dialogs, dropdown menus, comboboxes, or any primitive that requires the canonical Root/Trigger/Portal/Content composition chain. Reads `node_modules/reka-ui/dist/<primitive>/` as ground truth (training data may be stale) and cites `file:line` references in every finding.
 
-**The 5 audit checks:**
+**The audit checks:**
 
-1. **API verification** — PHP reflection on `Livewire\Component` (catches fabricated methods like `$this->hasLoading()`)
-2. **`wire:ignore` zone scan** — finds descendants with `wire:*` directives inside ignored subtrees (silent reactivity failure)
-3. **Form-Object pattern recommendation** — picks between `Livewire\Form` / property+`rules()` / Spatie LaravelData based on use-case shape
-4. **Echo / broadcasting morphing-race detection** — flags callbacks that mutate DOM directly before Livewire's next morph
-5. **Lifecycle hook usage** — verifies hook names and flags common mistakes (`updated()` without filtering, `mount()` doing work that belongs in `hydrate()`, etc.)
+1. **Component inventory** — finds all Vue files importing from `reka-ui`; classifies primitives in use
+2. **Per-primitive composition audit** — verifies canonical Root/Trigger/Content chain; flags `asChild` on fragments; detects missing `Portal` wrapping for Dialog/Popover/DropdownMenu
+3. **Tailwind 4 composition audit** — verifies `data-[state=open]:` modifiers used for state styling (not `v-if` toggling); checks animation utilities on closed state
+4. **Controlled vs uncontrolled state audit** — classifies each primitive as controlled/uncontrolled; flags mixed-mode and one-way binding
+5. **Accessibility-by-default verification** — flags manual `aria-*` attributes that conflict with Reka's own ARIA management; detects missing `DialogTitle`, disabled focus traps, removed keyboard handlers
 
-**Output:** structured markdown audit report with severity classification (critical / important / minor) and concrete suggestions per finding.
+**Output:** structured markdown audit report with severity classification (Blocker / Should-fix / Nice-to-have) and concrete Vue-code suggestions per finding. Every finding cites `node_modules/reka-ui/dist/<path>`.
 
-**Tools:** Read, Bash, WebFetch, WebSearch.
+**Tools:** Read (node_modules/reka-ui/dist/), Bash, WebFetch, WebSearch.
 
-**Required:** PHP 8+ in PATH (for reflection invocation). Falls back to docs-only verification via WebFetch if `vendor/livewire/` is missing.
+**Required:** `reka-ui` installed in `node_modules/`. Falls back to docs-only verification via `https://reka-ui.com/` if node_modules missing.
 
-**Smoke-test evidence:** See [`superpowers/test-evidence/2026-05-15-livewire-specialist-smoke-*.md`](superpowers/test-evidence/) for captured outputs covering the canonical bug, a clean phase, and a non-Livewire fail-clean case.
+**Stack note:** Targets the `laravel/vue-starter-kit` default stack (Reka UI + Tailwind 4). Does not apply to projects using Headless UI, shadcn-vue without Reka, or plain Tailwind without primitives.
 
 ---
 
@@ -60,25 +60,50 @@
 
 ---
 
-### `laravel-flux-pro-specialist`
+### `laravel-inertia-specialist`
 
-**Use when:** about to write or edit a Blade template that uses Flux Pro v2 components (`<flux:*>`). Particularly valuable when wrapping Flux components in tooltips, building toolbars, or composing dropdowns/menus/popovers. Reads `vendor/livewire/flux-pro/stubs/resources/views/flux/` as ground truth (docs sometimes lag) and cites vendor `file:line` references in every finding.
+**Use when:** about to write or review code that touches Inertia.js — controller `Inertia::render` calls, `useForm` / `usePage` composables, `<Link>` navigation, partial reloads, deferred props, or Inertia v3 features (`useHttp`, `usePoll`, `history.encrypt`). Particularly valuable before any form implementation (useForm vs axios anti-pattern), before adding shared data (Inertia::share overuse), and before implementing polling (setInterval vs usePoll).
 
-**The 5 audit checks:**
+**The audit checks:**
 
-1. **`<flux:with-tooltip>` Self-Wrap Detection** — flags double-wrap when an outer `<flux:tooltip>` wraps a component that already self-tooltips (`<flux:button>`, `<flux:icon-button>`, `<flux:editor.button>`, etc.). Double-wrap breaks `<ui-toolbar>` roving-tabindex — silent a11y regression.
-2. **Position/Align Convention Scan** — flags compound `position="bottom end"` syntax in favor of project-canon separate props `position="bottom" align="end"`.
-3. **`<flux:editor.spacer/>` Semantics** — verifies spacer placement inside toolbar containers (renders `flex-1`, only meaningful in flex contexts).
-4. **`wire:ignore` Zone Reactive-Descendant Detection** — catches Livewire-reactive attrs (`wire:click`, `wire:model`, etc.) on Flux components inside `wire:ignore` zones. Suggests Alpine `x-on:click="$wire.foo()"` bridge.
-5. **Slot Composition vs String-Prop Trade-off** — flags string `toolbar="..."` prop usage when slot form is needed (3+ items, dynamic content, event handlers, `<flux:editor.spacer/>`).
+1. **Pre-flight** — detects Inertia version (v3 vs v2 compat mode) from `vendor/inertiajs/inertia-laravel/composer.json`; notes v3-only features
+2. **Controller-side inventory** — classifies `Inertia::render` data-passing patterns (eager / lazy / defer / full-model leak)
+3. **Form handling audit** — flags `axios.post()` / `fetch()` instead of `useForm` (HARD BAN); checks `useForm().withPrecognition()` for Precognition integration
+4. **Shared data audit** — flags `Inertia::share` overuse (>4 keys, large payloads); verifies `usePage().props.x` access wrapped in `computed()`
+5. **Partial reload + deferred props audit** — verifies `only:` keys match controller render; checks `<Deferred>` wrapper on Vue side
+6. **Modal stack + history encryption audit** — Inertia v3 modal API; `history.encrypt` on sensitive routes
+7. **Polling audit** — flags manual `setInterval(() => router.reload(), N)` instead of `usePoll(N)` (v3 canonical)
 
-**Output:** structured markdown audit report with severity classification + concrete Blade-code suggestions per finding. Every finding cites `vendor/livewire/flux-pro/stubs/resources/views/flux/<path>:<line>`.
+**Output:** structured markdown audit report (Blocker / Should-fix / Nice-to-have) with `file:line` citations.
 
-**Tools:** Read (vendor Blade files), Bash, WebFetch, WebSearch.
+**Tools:** Read, Bash, WebFetch, WebSearch.
 
-**Required:** Flux Pro installed in vendor/. Falls back to docs-only verification via `https://fluxui.dev/docs/` if vendor missing.
+**Required:** `vendor/inertiajs/inertia-laravel/` present. Falls back to WebFetch `https://inertiajs.com/` if vendor missing.
 
-**Smoke-test evidence:** See [`superpowers/test-evidence/2026-05-15-flux-pro-specialist-smoke-*.md`](superpowers/test-evidence/) for captured outputs covering the double-wrap catch (Block 1H Phase 1 canonical bug), a clean dropdown with separate position+align, and a non-Flux fail-clean case.
+**Stack note:** Targets Inertia v3 by default. v2 compat-mode detected automatically from vendor version; v3-only API checks skipped in compat mode.
+
+---
+
+### `laravel-vue3-specialist`
+
+**Use when:** about to write or edit a Vue 3 component using Composition API + `<script setup>` + TypeScript, or any composable in `resources/js/Composables/`. Particularly valuable before implementing reactive state (ref vs reactive choice), before adding lifecycle hooks (cleanup discipline), and before writing composables (single-responsibility, module-level state SSR-safety).
+
+**The audit checks:**
+
+1. **Component inventory** — classifies all Vue files by script style; flags Options API files as HARD BAN (Blocker)
+2. **Reactivity audit** — detects `const { x } = reactive(...)` destructure (loses reactivity); `reactive(0)` on primitives (invalid); refs in arrays without `.value`; pre-Vue-3.5 props destructure
+3. **Props + emits audit** — flags `defineProps({ x: Object })` without TS generic (HARD BAN); `defineEmits(['event'])` without TS generic (HARD BAN); `any` typed props
+4. **Composable design** — `use` prefix convention; single-responsibility check; module-level `ref()` safety for SSR environments
+5. **Lifecycle cleanup audit** — flags `setInterval`, `addEventListener`, WebSocket without paired `onUnmounted` cleanup (Blocker)
+6. **Watch usage audit** — `watch` vs `watchEffect` choice; async `watchEffect` without `onCleanup` + AbortController
+
+**Output:** structured markdown audit report (Blocker / Should-fix / Nice-to-have) with `file:line` citations.
+
+**Tools:** Read, Bash, WebFetch, WebSearch.
+
+**Required:** `node_modules/vue/` present. Falls back to heuristic checks if node_modules missing.
+
+**Stack note:** Targets Vue 3 Composition API + `<script setup lang="ts">`. Options API is a hard ban in this plugin's canon.
 
 ---
 
