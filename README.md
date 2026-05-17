@@ -4,7 +4,7 @@ Laravel + **Vue 3 (Composition API)** + **Inertia v3** + **Reka UI** + **Tailwin
 
 > **Stack scope:** This plugin targets the Vue 3 + Inertia v3 + Reka UI stack. For the Livewire 4 + Flux Pro v2 variant, see the sibling plugin [`laravel-livewire-superpowers`](https://github.com/altraWeb/laravel-livewire-superpowers) (v3.0.0+).
 >
-> **Pre-1.0 release:** Currently shipping `v1.0.0-alpha.1` (foundation: identity rename). Full agents/skills/hooks adaptation lands in Phases B-E (v1.0.0-alpha.2 through v1.0.0 stable). Functional usage from v1.0.0-alpha.2 onwards.
+> **Pre-1.0 release:** Currently shipping `v1.0.0-alpha.2` (Phase B: specialists + 4 anti-pattern hooks). Functional today for Vue 3 + Inertia + Reka UI projects. Remaining adaptation (skill sub-sections in Phase C, hook repurpose in Phase D) lands before v1.0.0 stable cut in Phase E.
 
 📍 **[Roadmap](docs/ROADMAP.md)** — see what's planned + tracked GitHub issues
 📊 **[Versions](#versions)** — phase-by-phase release history
@@ -105,7 +105,7 @@ Run the superpowers skill first for generic structure; run the laravel-vue-super
 | Plugin | Stack | Status |
 |---|---|---|
 | [`laravel-livewire-superpowers`](https://github.com/altraWeb/laravel-livewire-superpowers) | Laravel + Livewire 4 + Flux Pro v2 + Pest 4 | Released (v3.0.0+) |
-| `laravel-vue-superpowers` (this repo) | Laravel + Vue 3 + Inertia v3 + Reka UI + Tailwind 4 + Pest 4 | Alpha (v1.0.0-alpha.1+) |
+| `laravel-vue-superpowers` (this repo) | Laravel + Vue 3 + Inertia v3 + Reka UI + Tailwind 4 + Pest 4 | Alpha (v1.0.0-alpha.2+) |
 
 ## Versions
 
