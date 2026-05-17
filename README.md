@@ -3,8 +3,6 @@
 Laravel + **Vue 3 (Composition API)** + **Inertia v3** + **Reka UI** + **Tailwind CSS 4** + **Pest 4** specialist toolkit for [Claude Code](https://claude.ai/code) — designed to complement the [superpowers](https://github.com/anthropics/claude-plugins-official) base plugin with deep stack-specific expertise.
 
 > **Stack scope:** This plugin targets the Vue 3 + Inertia v3 + Reka UI stack. For the Livewire 4 + Flux Pro v2 variant, see the sibling plugin [`laravel-livewire-superpowers`](https://github.com/altraWeb/laravel-livewire-superpowers) (v3.0.0+).
->
-> **Pre-1.0 release:** Currently shipping `v1.0.0-alpha.4` (Phase D: hook repurpose). Functional today for Vue 3 + Inertia + Reka UI projects. Remaining adaptation (release polish in Phase E) lands before v1.0.0 stable cut.
 
 📍 **[Roadmap](docs/ROADMAP.md)** — see what's planned + tracked GitHub issues
 📊 **[Versions](#versions)** — phase-by-phase release history
@@ -105,11 +103,12 @@ Run the superpowers skill first for generic structure; run the laravel-vue-super
 | Plugin | Stack | Status |
 |---|---|---|
 | [`laravel-livewire-superpowers`](https://github.com/altraWeb/laravel-livewire-superpowers) | Laravel + Livewire 4 + Flux Pro v2 + Pest 4 | Released (v3.0.0+) |
-| `laravel-vue-superpowers` (this repo) | Laravel + Vue 3 + Inertia v3 + Reka UI + Tailwind 4 + Pest 4 | Alpha (v1.0.0-alpha.2+) |
+| `laravel-vue-superpowers` (this repo) | Laravel + Vue 3 + Inertia v3 + Reka UI + Tailwind 4 + Pest 4 | Released (v1.0.0+) |
 
 ## Versions
 
-- **v1.0.0-alpha.4 (2026-05-17) — Phase D: Hook Repurpose** *(current)* — Renamed `vendor-source-preflight` → `inertia-vendor-preflight` (Reka UI + Inertia detection in `.vue` files); broadened `lang-key-existence-preflight` to also fire on `.vue` files.
+- **v1.0.0 (2026-05-17) — V1 Stable** *(current)* — First stable release. Consolidates 4 phased alphas. 11 agents / 7 skills / 16 hooks / 3 slash commands. Full Pilot 2.0 contract enforcement. Self-audit: 0 blockers, 17 shell + 37 Python tests green.
+- **v1.0.0-alpha.4 (2026-05-17) — Phase D: Hook Repurpose** — Renamed `vendor-source-preflight` → `inertia-vendor-preflight` (Reka UI + Inertia detection in `.vue` files); broadened `lang-key-existence-preflight` to also fire on `.vue` files.
 - **v1.0.0-alpha.3 (2026-05-17) — Phase C: Skill Sub-Section Swaps** — Swapped Livewire-flavored sub-sections in 4 skills with Vue 3 + Inertia v3 + Reka UI equivalents: a11y skill rewritten to 3 manual patterns + Reka-handles section; code-review §9/§10 → Inertia+Vue/Reka UI checklists; debugging items #3/#8 → Inertia API / Vue 3 reactivity gotchas; TDD items #3/#8 → assertInertia matchers / Pest browser + Vue testing.
 - **v1.0.0-alpha.2 (2026-05-17) — Phase B: Specialists + Anti-Pattern Hooks** — Removed Livewire + Flux Pro specialist agents; added Reka UI, Inertia v3, and Vue 3 Composition API specialists; added 4 PreToolUse anti-pattern hooks for `.vue` / `.ts` files. First functional release for Vue 3 + Inertia v3 + Reka UI workloads.
 - **v1.0.0-alpha.1 (2026-05-17) — Phase A: Identity Rename** — Plugin renamed from Livewire clone → laravel-vue-superpowers. Config paths, slash commands, README, docs/banners rebranded for Vue 3 + Inertia v3 + Reka UI + Tailwind 4 + Pest 4 stack. No content adaptation yet — agents/skills/hooks still from Livewire source.

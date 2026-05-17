@@ -4,6 +4,46 @@ All notable changes to `laravel-vue-superpowers` are documented here. Format fol
 
 This plugin was cloned from [`altraWeb/laravel-livewire-superpowers@v3.0.0`](https://github.com/altraWeb/laravel-livewire-superpowers/releases/tag/v3.0.0) on 2026-05-17. The pre-clone CHANGELOG is preserved at [`docs/ARCHIVE/CHANGELOG-from-livewire-source.md`](docs/ARCHIVE/CHANGELOG-from-livewire-source.md) for origin trace.
 
+## [1.0.0] — 2026-05-17 — V1 Stable
+
+First stable release of the Vue 3 + Inertia v3 + Reka UI + Tailwind CSS 4 + Pest 4 Laravel specialist plugin. Consolidates 4 phased alpha releases (alpha.1 through alpha.4) into v1.0.0.
+
+### Summary
+
+V1.0.0 ships:
+- **11 specialist agents** — laravel-best-practices, laravel-pest-specialist, laravel-architect, laravel-reviewer, laravel-echo-reverb-specialist, spatie-permission-auditor, laravel-package-evaluator, laravel-pilot-orchestrator (stack-agnostic carryover) + laravel-reka-ui-specialist, laravel-inertia-specialist, laravel-vue3-specialist (new Vue-stack-specific)
+- **7 skills** — laravel-brainstorming, laravel-tdd, laravel-debugging, laravel-code-review, laravel-a11y-specialist (3 patterns + Reka-handles section), laravel-mr-body-writer, laravel-perf-auditor
+- **16 hooks** — 11 stack-agnostic (banned-token / no-Claude-attribution / teamcity / anti-silent-deferral / visual-companion / brainstorm-T1 / sprint-state / stale-branch / master-roadmap-drift / pilot-2-contract-enforcer / lang-key-existence-preflight broadened to .vue) + 1 repurposed (inertia-vendor-preflight) + 4 Vue/Inertia anti-pattern (vue-setinterval-cleanup / vue-reactive-destructure / inertia-link-external-url / inertia-hardcoded-route)
+- **3 slash commands** — `/status`, `/audit-phase N`, `/retro`
+- **Full Pilot 2.0 contract** (T1-T6) with canonical reference doc + meta-orchestrator agent + continuous enforcer hook
+
+### Phase rollup
+
+- **Phase A** (foundation) — identity rename + Vue-named config paths + slash commands + README + docs + archives
+- **Phase B** (specialists + hooks) — REMOVE livewire, REPLACE flux→reka, ADD inertia + vue3 specialists + 4 anti-pattern hooks
+- **Phase C** (skill swaps) — a11y 7→3 patterns, code-review §9-10 swap, debugging #3+#8, tdd #3+#8
+- **Phase D** (hook repurpose) — vendor-source-preflight → inertia-vendor-preflight, lang-key-existence-preflight broadened to .vue
+
+### Stack pinned
+
+Laravel 12/13, PHP 8.2+, Inertia v3 (v2 opt-in compat), Vue 3 + Composition API + `<script setup>` + TypeScript (Options API hard-banned), Vite 6/7, Tailwind CSS 4, Reka UI ^2.6.1, Wayfinder v1, spatie/laravel-data + spatie/laravel-typescript-transformer, Pest 4 + Browser plugin (Playwright), composables-first state (Pinia opt-in), Reverb, useForm + Precognition.
+
+### Origin
+
+Cloned from `altraWeb/laravel-livewire-superpowers@v3.0.0` on 2026-05-17 (origin record: `docs/ARCHIVE/CLONE_FORK_STATUS.md`). Adaptation effort: ~18-22h across 4 phased alphas.
+
+### Self-audit
+
+Full audit: [`docs/audits/2026-05-17-v1-stable-self-audit.md`](docs/audits/2026-05-17-v1-stable-self-audit.md) — 0 blockers / 0 should-fix / 0 nice-to-have. All 17 shell + 37 Python tests green.
+
+### What's next
+
+- Wayfinder-dedicated specialist (deferred from V1, defer to v1.1.0 RFC)
+- Inertia v3 specifics that may evolve as the ecosystem matures
+- Pinia / SSR / shadcn-vue opt-in skills/presets if adoption grows
+
+---
+
 ## [1.0.0-alpha.4] — 2026-05-17 — Phase D: Hook Repurpose
 
 Phase D repurposes the inherited `vendor-source-preflight` hook for Reka UI + Inertia detection (was: Flux Pro v2 + Livewire) and broadens `lang-key-existence-preflight` to also fire on `.vue` files.
