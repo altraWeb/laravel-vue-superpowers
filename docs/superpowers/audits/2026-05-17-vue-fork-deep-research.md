@@ -10,6 +10,29 @@
 
 ---
 
+## ✅ Stack Decisions Reconciled (operator response 2026-05-17)
+
+The two material drifts surfaced in the Executive Summary below have been reconciled by the operator:
+
+1. **Inertia v2 → Inertia v3 (DEFAULT).** Operator confirmed mirror Laravel canon. The plugin's specialist agents target Inertia v3 API surface (`useHttp`, deferred-prop helpers, history encryption, polling primitives). Inertia v2 documented as opt-in compat-mode in the `laravel-inertia-specialist` agent body with explicit version-detection guidance.
+
+2. **"NO UI library" stance REVERSED → Reka UI as default.** Operator agreed to mirror `laravel/vue-starter-kit` canon. Carryover matrix shifts accordingly:
+   - `laravel-flux-pro-specialist` → REPLACE with `laravel-reka-ui-specialist` (was: REMOVE entirely)
+   - `laravel-a11y-specialist` skill — reduced manual ARIA scope (~3 patterns instead of 7; Reka UI primitives are accessible-by-default for modal / dropdown / form validation)
+   - `laravel-code-review` skill §10 UI sub-checklist — Reka UI patterns instead of Flux Pro v2 patterns (analogous shape, no scope change)
+   - shadcn-vue (built on Reka UI) and PrimeVue available as opt-in skill/preset
+   - `laravel-best-practices` agent no longer needs the "do not recommend Reka UI" project-canon override
+
+With both reversals, **carryover rises from ~70% to ~75%** (UI-specialist agent slot reused rather than deleted) and **effort estimate revises down from ~20-25h to ~18-22h**.
+
+The phase-by-phase plan in section "Recommended Plan" remains valid with two adjustments:
+- Phase B: REPLACE flux→reka-ui specialist (was: REMOVE flux only)
+- Phase C: a11y rewrite scope reduced to ~3 patterns (wire:loading equivalent + reduced-motion + audio control)
+
+All other research findings stand.
+
+---
+
 ## Executive Summary
 
 The user's "most stays the same" claim is **largely correct: ~70% of the existing plugin content carries over 1:1 or with cosmetic sub-checklist swaps**. The backend Laravel layer (Eloquent, Pest, Reverb, Spatie permissions, Pilot 2.0 contract, all 12 hooks except `vendor-source-preflight`) is stack-agnostic and carries over unchanged. Only the **2 frontend-stack specialist agents** (`laravel-livewire-specialist`, `laravel-flux-pro-specialist`) are net deletions, and only the **frontend sub-checklists in 3 skills** (`laravel-a11y-specialist`, `laravel-code-review`, `laravel-debugging`) need content swaps.
