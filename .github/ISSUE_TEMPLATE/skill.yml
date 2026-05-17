@@ -1,0 +1,71 @@
+name: New skill (or skill enhancement)
+description: Propose a new Skill or improvement to an existing Skill in laravel-superpowers
+title: "Add <skill-name> skill (<one-line scope>) | Enhance <skill-name> — <topic>"
+labels: ["enhancement", "skill"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for proposing a Skill! Skills are invoked via the `Skill` tool and provide structured workflows + checklists. Unlike agents, skills don't have their own context window — they augment the orchestrator's behavior.
+
+        Before submitting, please check the [skills/](https://github.com/altraWeb/laravel-superpowers/tree/main/skills) directory and existing open issues with `skill` or `skill-enhancement` labels.
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Skill kind
+      options:
+        - New skill
+        - Skill enhancement
+    validations:
+      required: true
+
+  - type: input
+    id: target_skill
+    attributes:
+      label: Existing skill name (for enhancements only)
+      description: Leave blank if proposing a new skill
+      placeholder: "laravel-tdd"
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: What observed pain or missed-catch in a recent sprint justifies this? Cite commit SHA, audit transcript, or production bug.
+      placeholder: "Observed in Block 1H Task 4.1: Pest's toContain() is variadic — implementer passed message as 2nd arg, treated as 2nd needle..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What checklist items, recipes, or invocation steps should the skill cover?
+      placeholder: |
+        - `toContain($needle, $message)` is variadic — use `->because()` modifier instead
+        - `wait(N)` is a smell — rely on 5s implicit timeout
+        - ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: 4-6 measurable bullets defining "done"
+    validations:
+      required: true
+
+  - type: input
+    id: tier
+    attributes:
+      label: Suggested tier
+      placeholder: "tier-1"
+    validations:
+      required: true
+
+  - type: textarea
+    id: related
+    attributes:
+      label: Related references
+      description: Memory rules, sprint MRs, related agents/skills

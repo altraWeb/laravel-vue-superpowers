@@ -1,0 +1,5 @@
+# Runtime dependencies for laravel-superpowers config helper.
+# Install on the dev machine before using hooks that depend on config:
+#   pip3 install --user --break-system-packages -r requirements.txt
+PyYAML>=6.0
+jsonschema>=4.0

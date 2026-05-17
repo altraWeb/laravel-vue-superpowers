@@ -1,0 +1,63 @@
+name: New agent
+description: Propose a new Claude Code agent (subagent_type) for laravel-superpowers
+title: "Add laravel-<name> agent (<one-line scope>)"
+labels: ["enhancement", "agent"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for proposing a new agent! Agents are Claude Code subagents invoked via the `Task` tool with a specific `subagent_type`. They have access to multiple tools and run in their own context window.
+
+        Before submitting, please check that this isn't duplicated by an existing agent in the [agents/](https://github.com/altraWeb/laravel-superpowers/tree/main/agents) directory or existing open issues with the `agent` label.
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: What observed pain or missed-catch in a recent sprint justifies this agent? Be concrete — cite commit SHA, audit transcript, or production bug.
+      placeholder: "Observed in Block 1H Phase 5 audit (commit cb8a8d0): the planned $this->hasLoading() approach used a fabricated Livewire 4 API..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What exactly should this agent know + do? Be specific about tools needed (grep, find, Read, vendor source access, MCP tools, etc.).
+      placeholder: |
+        - **Verified API surface knowledge** of Livewire 4: ...
+        - **Default-scan on dispatch**: read routes/channels.php, ...
+        - **Cites file:line refs** in findings
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: 4-6 measurable bullets defining "done"
+      placeholder: |
+        - [ ] Agent dispatched on every Livewire-touching plan-phase BEFORE implementer
+        - [ ] Output includes API-verification section
+        - [ ] Agent reads vendor source for ground truth, not just docs
+    validations:
+      required: true
+
+  - type: input
+    id: tier
+    attributes:
+      label: Suggested tier
+      description: tier-1 (would catch real bugs in observed sprints) / tier-2 (high-value, observed gaps) / tier-3 (nice-to-have future-sprint utility)
+      placeholder: "tier-1"
+    validations:
+      required: true
+
+  - type: textarea
+    id: related
+    attributes:
+      label: Related references
+      description: Memory rules, sprint MRs, vendor source paths, existing agents/skills this complements
+      placeholder: |
+        - Memory rule `feedback_pilot_2_workflow_contract`
+        - Block 1H Phase 5 audit
+        - Existing `laravel-best-practices` agent (this complements it for stack X depth)

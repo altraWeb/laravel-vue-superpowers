@@ -1,0 +1,9 @@
+{
+    "name": "laravel-vue-superpowers",
+    "version": "0.1.0-cloned-from-livewire-v3.0.0",
+    "description": "Laravel + Vue 3 (Composition API) + Inertia v2 + Pest 4 specialist toolkit for Claude Code. **WORK IN PROGRESS** — repo just forked from laravel-livewire-superpowers v3.0.0 (2026-05-17). Vue stack adaptation pending: Livewire/Flux specialists will be replaced with Inertia/Vue3 specialists; hook + skill catalog will be adapted. Do NOT install yet.",
+    "author": {
+        "name": "altraWeb"
+    },
+    "keywords": ["laravel", "vue", "vue3", "inertia", "pest", "php", "tdd", "workflow", "code-review", "agents", "hooks", "specialist-agents", "pilot-2.0", "wip"]
+}

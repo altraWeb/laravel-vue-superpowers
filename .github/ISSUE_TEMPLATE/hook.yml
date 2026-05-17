@@ -1,0 +1,78 @@
+name: New hook (or plugin infrastructure)
+description: Propose a Claude Code hook, slash command, or plugin infrastructure for laravel-superpowers
+title: "Hook: <event> <one-line scope> | Slash command: /laravel-superpowers:<name> | Infra: <component>"
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for proposing infrastructure! Hooks fire on Claude Code events (PreToolUse, PostToolUse, SessionStart, Stop, UserPromptSubmit). Slash commands provide operator-facing shortcuts. Plugin config + status commands give project-level customization.
+
+        Before submitting, check existing open issues with `hook`, `slash-command`, or `infra` labels.
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - Hook
+        - Slash command
+        - Plugin infrastructure (config, status, etc.)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: hook_event
+    attributes:
+      label: Hook event (if Hook)
+      description: Which Claude Code event does this fire on?
+      options:
+        - PreToolUse
+        - PostToolUse
+        - SessionStart
+        - Stop
+        - UserPromptSubmit
+        - Not applicable (slash command or infra)
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: What observed pain or missed-catch in a recent sprint justifies this? Cite specific examples.
+      placeholder: "Block 1H Phase 6 hard-gate banned-token sweep caught 2 leaks at the END before push — required commit 265c421 to strip. A PreToolUse hook on git commit would block at commit-time..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Concrete behavior — what does the hook/command/infra do? When does it fire? What does it block/warn/inject?
+      placeholder: |
+        - Match pattern: ...
+        - On match: BLOCK with diagnostic / WARN / AUTO-INJECT
+        - Project-config override: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: 4-6 measurable bullets defining "done"
+    validations:
+      required: true
+
+  - type: input
+    id: tier
+    attributes:
+      label: Suggested tier
+      placeholder: "tier-1"
+    validations:
+      required: true
+
+  - type: textarea
+    id: related
+    attributes:
+      label: Related references
+      description: Memory rules, sprint MRs, related hooks/agents

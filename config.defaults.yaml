@@ -1,0 +1,93 @@
+# laravel-livewire-superpowers — plugin default config.
+# This file is the canonical schema source. Every key here is recognized;
+# unknown top-level keys in user/project configs will be rejected.
+#
+# To override these defaults, create one of:
+#   ~/.claude/plugins/altraweb-laravel/laravel-superpowers/config.yaml   (user-global)
+#     ↑ path uses V2 name — intentionally preserved for V2-user config compatibility (V3 design spec §8)
+#   ./.laravel-superpowers.yaml                                          (per-project, takes precedence)
+#     ↑ filename uses V2 name — intentionally preserved for V2-user config compatibility (V3 design spec §8)
+# Run: python3 lib/config.py init [--project]   to scaffold either file.
+
+# Pilot contract version. 1 = audits optional, 2 = binding hard-gates.
+pilot_version: 2
+
+# Per-hook enable/disable flags. Set to false to no-op a specific hook
+# without affecting others. Unknown sub-keys here are allowed (future hooks
+# can opt in without a schema bump).
+hook_enabled:
+  banned_token_leak_guard: true
+  no_claude_attribution: true
+  teamcity_always: true
+  anti_silent_deferral: true
+  brainstorm_t1_audit: true
+  visual_companion_default_on: true
+  sprint_state_context_injection: true
+  stale_branch_sweep: true
+  master_roadmap_drift_detector: true
+  pilot_2_contract_enforcer: true
+  vendor_source_preflight: true
+  lang_key_existence_preflight: true
+
+# When does Tier-1 audit auto-dispatch fire?
+#   every-phase     — agent dispatches at every Pilot phase boundary (advisory)
+#   every-commit    — agent dispatches before every git commit (advisory)
+#   brainstorm-only — only the brainstorm-time hook fires (programmatic)
+#
+# IMPORTANT (v2.0.1 clarification): this setting is **advisory metadata** read
+# by the orchestrator agent. Only the brainstorm-time dispatch is
+# programmatically enforced — the `brainstorm-t1-audit` hook fires on every
+# `superpowers:brainstorming` invocation regardless of this value. For
+# `every-phase` and `every-commit` modes, the agent is expected to read this
+# setting via `/laravel-livewire-superpowers:status` and self-dispatch at the
+# corresponding boundary. There is no hook that auto-fires at phase or commit
+# boundaries (Claude Code does not emit those events). See
+# docs/audits/2026-05-15-v2-mvp-self-audit.md §"Should-fix S2".
+#
+# audit_aggressiveness modes are now wired into the pilot-2-contract-enforcer
+# hook (added in v3.0.0-alpha.5):
+#   brainstorm-only — silent (no enforcement)
+#   every-phase     — warns on T3/T4 markers at git commit/push (default)
+#   every-commit    — currently warns too (block requires PostToolUse-block
+#                     support in Claude Code, not universally available)
+audit_aggressiveness: every-phase
+
+# Banned-token leak guard configuration.
+banned_tokens:
+  # Project-specific tokens to ban in addition to the built-in list.
+  # Example: ["AcmeCorp", "INT-1234"]
+  project_extras: []
+
+  # Path globs where banned tokens are tolerated (docs that legitimately
+  # reference Phase/Sprint/etc).
+  exception_paths:
+    - "docs/plans/**"
+    - "docs/superpowers/**"
+    - "skills/**"
+    - "CHANGELOG.md"
+    - "docs/*.md"
+    - "agents/**"
+    - "commands/**"
+    - "README.md"
+
+# Visual companion default for brainstorming Step 2.
+#   on  — auto-open browser companion
+#   off — text-only
+#   ask — prompt operator each time
+visual_companion_default: "on"
+
+# Which roadmap tiers to surface in auto-suggestions.
+#   T1-only — V2-MVP only
+#   T1+T2   — V2-MVP + V2.1
+#   all     — everything including V2.2 and V3
+tier_preference: "T1+T2"
+
+# Always pass --teamcity to `php artisan test` for parsable output.
+teamcity_always: true
+
+# Stale-branch-sweep configuration.
+stale_branch_sweep:
+  # If true, automatically delete local branches whose upstream is gone
+  # at session start. Default false — sweep emits cleanup suggestions only.
+  # Env-var equivalent: LARAVEL_SUPERPOWERS_AUTO_PRUNE=1 (env wins if set).
+  auto_prune: false
