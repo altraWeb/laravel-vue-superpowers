@@ -485,6 +485,62 @@ grep -rn 'assertAttribute' tests/Browser/
 
 If no matches and you can't find it in `vendor/pestphp/pest-plugin-browser/`, the version doesn't support it. Fall back to `assertVisible` with a more specific selector, or invoke `laravel-pest-specialist` agent for reflection verification.
 
+### **#3 — Inertia page assertions (`assertInertia` + chainable matchers)**
+
+When testing Inertia controllers, use Pest's Inertia integration:
+
+```php
+test('users index page shows current user', function () {
+    $user = User::factory()->create();
+
+    actingAs($user)
+        ->get('/users')
+        ->assertInertia(fn ($page) => $page
+            ->component('Users/Index')
+            ->has('users', 1)
+            ->where('users.0.id', $user->id)
+            ->where('auth.user.id', $user->id)
+        );
+});
+```
+
+Common matchers:
+- `->component('Users/Index')` — verify the right Vue component is rendered
+- `->has('users', 5)` — assert exactly 5 items in the prop array
+- `->has('users.0.email')` — nested prop existence
+- `->where('users.0.id', $id)` — exact value match
+- `->missing('secret_field')` — assert a prop is NOT shared
+- `->etc()` — assert "checked all expected props, ignore extras"
+
+Anti-pattern: asserting on rendered HTML for Inertia pages. The HTML is Vue-rendered at runtime; Pest browser tests are the right tool for HTML-level assertions, NOT feature tests.
+
+### **#8 — Pest browser tests for Vue components**
+
+For Vue component behavior beyond data-flow (interactions, animations, complex state), use Pest 4 browser plugin (Playwright under the hood):
+
+```php
+test('clicking submit shows loading state', function () {
+    visit('/contact')
+        ->fill('email', 'test@example.com')
+        ->click('Submit')
+        ->assertVisible('[aria-busy="true"]')
+        ->wait()  // wait for response
+        ->assertSee('Thanks for your message');
+});
+```
+
+Common patterns:
+- `visit('/path')` — opens the page via Inertia visit
+- `fill('field', 'value')` — fills an input by label/name
+- `click('Button text')` — clicks by visible text
+- `assertVisible('[selector]')` — Reka UI's `data-state` attributes are excellent selectors
+- `wait()` — waits for next Inertia response (better than `wait(1000)` arbitrary timeouts)
+
+Anti-patterns:
+- `wait(1000)` arbitrary timeouts (use `wait()` or `assertVisible` polling instead)
+- Direct DOM manipulation (`$browser->script(...)`) — bypasses Vue reactivity
+- Asserting on Vue component internal state — assert on rendered DOM instead
+
 ### Specialist agent invocation
 
 When you hit an unexpected Pest 4 API failure during RED → GREEN:
