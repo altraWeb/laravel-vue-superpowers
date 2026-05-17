@@ -77,7 +77,7 @@ If the helper crashes / config helper not available, note: "config unavailable â
 Format (markdown â€” Claude Code renders it cleanly):
 
 ```
-## laravel-superpowers status
+## laravel-vue-superpowers status
 
 **Sprint:** <title from plan-doc> (branch `<current-branch>`)
 **Last commit:** <sha> <subject>

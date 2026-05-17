@@ -3,7 +3,7 @@ description: Dispatch a Pilot 2.0 Phase-N audit using the active plan-doc's per-
 allowed-tools: ["Read", "Bash", "Agent"]
 ---
 
-# laravel-livewire-superpowers:audit-phase N
+# laravel-vue-superpowers:audit-phase N
 
 Run a Pilot 2.0 T1 audit (best-practices research + anti-patterns + open questions) scoped to a specific Phase of the active plan-doc.
 
