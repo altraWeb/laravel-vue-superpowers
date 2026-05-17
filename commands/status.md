@@ -3,7 +3,7 @@ description: Show current sprint state, Pilot 2.0 obligations, hook compliance, 
 allowed-tools: ["Read", "Bash"]
 ---
 
-# laravel-superpowers:status
+# laravel-vue-superpowers:status
 
 Surface the current state of the project's active sprint, Pilot 2.0 obligations, hook compliance, and any pending follow-ups. **Read-only** — never mutate state, never run destructive commands.
 
@@ -77,7 +77,7 @@ If the helper crashes / config helper not available, note: "config unavailable �
 Format (markdown — Claude Code renders it cleanly):
 
 ```
-## laravel-superpowers status
+## laravel-vue-superpowers status
 
 **Sprint:** <title from plan-doc> (branch `<current-branch>`)
 **Last commit:** <sha> <subject>

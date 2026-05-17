@@ -27,10 +27,10 @@ def test_plugin_json_has_required_fields():
         assert field in data, f"missing field: {field}"
 
 
-def test_plugin_json_name_is_livewire_stack():
-    """V3 plugin name explicitly identifies Livewire stack."""
+def test_plugin_json_name_is_vue_stack():
+    """V1 plugin name explicitly identifies Vue stack."""
     data = json.loads((PLUGIN_DIR / "plugin.json").read_text())
-    assert data["name"] == "laravel-livewire-superpowers"
+    assert data["name"] == "laravel-vue-superpowers"
 
 
 def test_plugin_json_version_is_semver():

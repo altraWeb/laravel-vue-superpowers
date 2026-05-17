@@ -34,12 +34,12 @@ def plugin_dir(tmp_path):
 
 @pytest.fixture
 def user_config_dir(tmp_path, monkeypatch):
-    """A temp ~/.claude/plugins/altraweb-laravel/laravel-superpowers/ dir.
+    """A temp ~/.claude/plugins/altraweb-laravel/laravel-vue-superpowers/ dir.
 
     Monkeypatches HOME so the helper sees this as the user-global location.
     """
     fake_home = tmp_path / "home"
-    user_cfg = fake_home / ".claude" / "plugins" / "altraweb-laravel" / "laravel-superpowers"
+    user_cfg = fake_home / ".claude" / "plugins" / "altraweb-laravel" / "laravel-vue-superpowers"
     user_cfg.mkdir(parents=True)
     monkeypatch.setenv("HOME", str(fake_home))
     return user_cfg
@@ -47,7 +47,7 @@ def user_config_dir(tmp_path, monkeypatch):
 
 @pytest.fixture
 def project_cwd(tmp_path, monkeypatch):
-    """A temp dir set as cwd so .laravel-superpowers.yaml is discoverable."""
+    """A temp dir set as cwd so .laravel-vue-superpowers.yaml is discoverable."""
     pcwd = tmp_path / "project"
     pcwd.mkdir()
     monkeypatch.chdir(pcwd)

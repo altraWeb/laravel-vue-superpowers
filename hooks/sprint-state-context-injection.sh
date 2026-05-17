@@ -125,9 +125,9 @@ if [ -n "$last_commit_sha" ]; then
 fi
 
 ctx+=$'\n'
-ctx+="If you (the assistant) need full Pilot 2.0 obligation status, run \`/laravel-livewire-superpowers:status\`."
+ctx+="If you (the assistant) need full Pilot 2.0 obligation status, run \`/laravel-vue-superpowers:status\`."
 ctx+=$'\n'
-ctx+="To disable this auto-injection: set \`LARAVEL_SUPERPOWERS_SKIP_AUTO_RESUME=1\` in env, OR set \`hook_enabled.sprint_state_context_injection: false\` in .laravel-superpowers.yaml (filename preserved from V2 for config compatibility)."
+ctx+="To disable this auto-injection: set \`LARAVEL_SUPERPOWERS_SKIP_AUTO_RESUME=1\` in env, OR set \`hook_enabled.sprint_state_context_injection: false\` in .laravel-vue-superpowers.yaml."
 
 # Truncate to 2KB safety limit
 ctx_truncated="$(printf '%s' "$ctx" | head -c 2048)"

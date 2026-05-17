@@ -80,7 +80,7 @@ else
 
     cleanup_cmd="git branch -D $(echo "$stale_branches" | tr '\n' ' ')"
 
-    ctx="🌿 **Stale branches detected** (upstream gone after merge):"$'\n\n'"${listing}"$'\n'"Cleanup with:"$'\n'"\`\`\`"$'\n'"${cleanup_cmd}"$'\n'"\`\`\`"$'\n\n'"To auto-prune at session start: set \`LARAVEL_SUPERPOWERS_AUTO_PRUNE=1\` in env, OR set \`stale_branch_sweep.auto_prune: true\` in .laravel-superpowers.yaml (filename preserved from V2 for config compatibility)."
+    ctx="🌿 **Stale branches detected** (upstream gone after merge):"$'\n\n'"${listing}"$'\n'"Cleanup with:"$'\n'"\`\`\`"$'\n'"${cleanup_cmd}"$'\n'"\`\`\`"$'\n\n'"To auto-prune at session start: set \`LARAVEL_SUPERPOWERS_AUTO_PRUNE=1\` in env, OR set \`stale_branch_sweep.auto_prune: true\` in .laravel-vue-superpowers.yaml."
 fi
 
 # ─── Step 9: Emit additionalContext ──────────────────────────────────────────

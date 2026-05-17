@@ -3,7 +3,7 @@ description: Generate a sprint retrospective report from plan-doc + git history 
 allowed-tools: ["Read", "Bash"]
 ---
 
-# laravel-livewire-superpowers:retro
+# laravel-vue-superpowers:retro
 
 Generate an end-of-sprint retrospective report from the active branch's state. Read-only; never mutates anything.
 

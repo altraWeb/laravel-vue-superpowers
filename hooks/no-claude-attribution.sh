@@ -205,7 +205,7 @@ $(printf '%s' "$sanitized" | sed 's/^/  /')
 Operator's project canon: ZERO Claude attribution in commit messages,
 MR titles, or MR bodies. Recommit with the sanitized message.
 
-To disable globally, set in .laravel-superpowers.yaml (filename preserved from V2 for config compatibility):
+To disable globally, set in .laravel-vue-superpowers.yaml:
     hook_enabled:
       no_claude_attribution: false
 EOF

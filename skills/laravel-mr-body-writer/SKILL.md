@@ -1,6 +1,6 @@
 ---
 name: laravel-mr-body-writer
-description: "Use in Laravel projects when writing a merge-request / pull-request body at sprint close-out. Generates the canonical MR shape (Summary / Decisions / Pilot 2.0 contract / Spec + Plan link / Test plan with file paths + assertion counts / Scope changes / Deferred items / Follow-up issues / Screenshots) from the project's plan-doc, /laravel-livewire-superpowers:status output, and git history. Standardizes the 15-minute manual close-out task. Trigger on 'write MR body', 'PR description', 'sprint close-out', 'ready to merge', or before pushing a feature branch."
+description: "Use in Laravel projects when writing a merge-request / pull-request body at sprint close-out. Generates the canonical MR shape (Summary / Decisions / Pilot 2.0 contract / Spec + Plan link / Test plan with file paths + assertion counts / Scope changes / Deferred items / Follow-up issues / Screenshots) from the project's plan-doc, /laravel-vue-superpowers:status output, and git history. Standardizes the 15-minute manual close-out task. Trigger on 'write MR body', 'PR description', 'sprint close-out', 'ready to merge', or before pushing a feature branch."
 ---
 
 # Laravel MR Body Writer
@@ -91,7 +91,7 @@ Run in parallel:
 ls docs/superpowers/plans/*.md docs/plans/*.md 2>/dev/null | head -3
 
 # Sprint state
-/laravel-livewire-superpowers:status
+/laravel-vue-superpowers:status
 
 # Commits on the branch
 git log main..HEAD --format='%h %s'

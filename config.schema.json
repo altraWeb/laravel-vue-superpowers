@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/altraWeb/laravel-livewire-superpowers/main/config.schema.json",
-  "title": "laravel-livewire-superpowers config",
+  "$id": "https://raw.githubusercontent.com/altraWeb/laravel-vue-superpowers/main/config.schema.json",
+  "title": "laravel-vue-superpowers config",
   "type": "object",
   "additionalProperties": false,
   "properties": {
