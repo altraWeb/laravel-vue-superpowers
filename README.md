@@ -9,10 +9,14 @@ Laravel + **Vue 3 (Composition API)** + **Inertia v3** + **Reka UI** + **Tailwin
 
 ## Install
 
-```bash
-claude /plugin marketplace add altraWeb/laravel-marketplace
-claude /plugin install laravel-vue-superpowers@altraweb-laravel
+Inside a running Claude Code session (these are slash commands, not bash):
+
 ```
+/plugin marketplace add altraWeb/laravel-marketplace
+/plugin install laravel-vue-superpowers@altraweb-laravel
+```
+
+> **Note:** Do NOT prefix with `claude` from bash — the `/plugin` commands only work inside an active Claude Code session.
 
 ## Configuration
 
