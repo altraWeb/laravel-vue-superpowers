@@ -15,15 +15,15 @@ The adaptation work is scoped via a separate brainstorming session (see `docs/su
 
 ### To REMOVE
 - `agents/laravel-livewire-specialist.md`
-- `agents/laravel-flux-pro-specialist.md` (no UI library in use — operator builds own Vue 3 + Tailwind 4 components)
-- All Livewire-specific Blade patterns in skills (`laravel-a11y-specialist`, `laravel-code-review`, `laravel-debugging`)
-- `hooks/vendor-source-preflight.sh` Flux/Livewire detection patterns (Vue stack has no equivalent vendor stub library; hook may be repurposed for Inertia component-resource lookups OR removed entirely — TBD per follow-up brainstorming)
+- Livewire-specific Blade patterns in skills (replaced — see REPLACE section below)
+- Livewire-only hook content (`vendor-source-preflight` Flux/Livewire patterns — will be REPURPOSED for Reka UI / Inertia component lookups, not removed)
 
 ### To REPLACE
-- `laravel-livewire-specialist` → `laravel-inertia-specialist` + `laravel-vue3-specialist`
-- `laravel-flux-pro-specialist` → **REMOVE entirely** (operator builds own components with pure Tailwind 4; no UI-library specialist needed)
-- Livewire-flavored a11y patterns → Vue/Inertia patterns
-- Livewire code-review sub-checklists → Vue/Inertia sub-checklists
+- `agents/laravel-livewire-specialist.md` → `agents/laravel-inertia-specialist.md` + `agents/laravel-vue3-specialist.md`
+- `agents/laravel-flux-pro-specialist.md` → `agents/laravel-reka-ui-specialist.md` (analogous UI-library specialist role — Reka UI primitives instead of Flux Pro v2 components). REVISED 2026-05-17: operator initially planned "no UI library / pure Tailwind utility-first" but after Deep-Research showed Reka UI is the laravel/vue-starter-kit canonical default (v2.6.1+), reverted to Reka UI as default. shadcn-vue (built on Reka UI) and PrimeVue available as opt-in skill/preset.
+- Livewire-flavored a11y patterns → Vue/Inertia patterns (with Reka UI a11y built-in, so reduced manual ARIA scope)
+- Livewire code-review sub-checklists → Vue/Inertia sub-checklists (Reka UI sub-checklist analogous to Flux Pro v2 sub-checklist)
+- `vendor-source-preflight.sh` → repurposed to surface Reka UI component sources + Inertia helper stubs on Vue file edits (likely rename to `inertia-vendor-preflight.sh`)
 
 ### To KEEP unchanged (carryover 1:1)
 - `agents/laravel-pest-specialist.md` (Pest is stack-agnostic)
@@ -40,20 +40,21 @@ The adaptation work is scoped via a separate brainstorming session (see `docs/su
 - `/laravel-livewire-superpowers:status` → rename to `/laravel-vue-superpowers:status` (path-only change)
 
 ### To ADD
-- `agents/laravel-inertia-specialist.md` (Inertia v2 patterns: shared data, partial reloads, modals, deferred props)
-- `agents/laravel-vue3-specialist.md` (Composition API + `<script setup>` + TS patterns)
-- Anti-pattern hooks per the T1 audit:
-  - HARD-BAN: `Inertia::share` validation, axios in pages, no-TS props, Options API, AJAX initial state, SSR module-state
-  - WARN: useStore without need, hardcoded routes, Link with external URL, setInterval polling
+- `agents/laravel-inertia-specialist.md` (Inertia v3 patterns: shared data, partial reloads, modals, deferred props, `useHttp`, polling, history encryption)
+- `agents/laravel-vue3-specialist.md` (Composition API + `<script setup>` + TS patterns, reactive object/ref pitfalls, listener cleanup with `onUnmounted`)
+- Anti-pattern hooks per the T1 audit + 4 additional from Deep-Research:
+  - HARD-BAN: `Inertia::share` validation overuse, axios in pages, no-TS props, Options API, AJAX initial state, SSR module-state
+  - HARD-BAN (new): `setInterval` without `onUnmounted` cleanup, Vue 3 reactive-object-destructure pitfall (refs in arrays don't auto-unwrap)
+  - WARN: useStore without need, hardcoded routes (when Wayfinder shipped), `<Link>` with external URL (silent 409), `setInterval` polling without Page-Visibility check
 
 ## Stack decisions (from T1 audit)
 
 Default stack for `laravel-vue-superpowers`:
 - Laravel 12+ / PHP 8.2+
-- Inertia v2 (v3 in beta — opt-in)
+- Inertia v3 (stable since 2026-03-26, canonical default per `laravel/vue-starter-kit`). v2 available as opt-in compat-mode. (REVISED 2026-05-17 after Deep-Research.)
 - Vue 3 + Composition API + `<script setup>` + TypeScript (Options API hard-banned)
 - Vite 6/7 + Tailwind CSS 4
-- UI: **pure Vue 3 + Tailwind CSS 4 utility-first** — NO UI library (operator builds own components). shadcn-vue / Reka UI / PrimeVue are explicitly NOT defaults; available as opt-in skill/preset only if added later.
+- UI: **Reka UI ^2.6.1** (accessible Vue 3 primitives, the engine under shadcn-vue) + Tailwind CSS 4. Mirrors `laravel/vue-starter-kit` canon. shadcn-vue + PrimeVue available as opt-in. (REVISED 2026-05-17: initial "no UI library" stance reverted after Deep-Research validated Reka UI as canonical Laravel starter-kit default.)
 - Routing/Types: Wayfinder v1 default
 - DTOs: spatie/laravel-data + spatie/laravel-typescript-transformer
 - Testing: Pest 4 + Browser plugin (Playwright) — identical to Livewire variant
