@@ -213,3 +213,27 @@ def test_get_lang_key_existence_preflight_default(cli):
     result = cli("get", "hook_enabled.lang_key_existence_preflight")
     assert result.returncode == 0, result.stderr
     assert result.stdout.strip() == "true"
+
+
+def test_get_vue_setinterval_cleanup_default(cli):
+    result = cli("get", "hook_enabled.vue_setinterval_cleanup")
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == "true"
+
+
+def test_get_vue_reactive_destructure_default(cli):
+    result = cli("get", "hook_enabled.vue_reactive_destructure")
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == "true"
+
+
+def test_get_inertia_link_external_url_default(cli):
+    result = cli("get", "hook_enabled.inertia_link_external_url")
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == "true"
+
+
+def test_get_inertia_hardcoded_route_default(cli):
+    result = cli("get", "hook_enabled.inertia_hardcoded_route")
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == "true"

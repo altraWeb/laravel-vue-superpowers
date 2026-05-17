@@ -26,6 +26,10 @@ hook_enabled:
   pilot_2_contract_enforcer: true
   vendor_source_preflight: true
   lang_key_existence_preflight: true
+  vue_setinterval_cleanup: true
+  vue_reactive_destructure: true
+  inertia_link_external_url: true
+  inertia_hardcoded_route: true
 
 # When does Tier-1 audit auto-dispatch fire?
 #   every-phase     — agent dispatches at every Pilot phase boundary (advisory)
