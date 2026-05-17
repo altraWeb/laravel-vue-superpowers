@@ -15,8 +15,8 @@ val=$(python3 "$PLUGIN_DIR/lib/config.py" get pilot_version)
 [ "$val" = "2" ] || { echo "FAIL case 1: expected 2, got '$val'"; exit 1; }
 
 # Case 2: user overlay
-mkdir -p "$HOME/.claude/plugins/altraweb-laravel/laravel-superpowers"
-echo "pilot_version: 1" > "$HOME/.claude/plugins/altraweb-laravel/laravel-superpowers/config.yaml"
+mkdir -p "$HOME/.claude/plugins/altraweb-laravel/laravel-vue-superpowers"
+echo "pilot_version: 1" > "$HOME/.claude/plugins/altraweb-laravel/laravel-vue-superpowers/config.yaml"
 val=$(python3 "$PLUGIN_DIR/lib/config.py" get pilot_version)
 [ "$val" = "1" ] || { echo "FAIL case 2: expected 1, got '$val'"; exit 1; }
 
@@ -24,7 +24,7 @@ val=$(python3 "$PLUGIN_DIR/lib/config.py" get pilot_version)
 # NOTE: ":::broken:::" is valid YAML (PyYAML parses it as a dict key), so
 # "key: {broken yaml" is used instead — this is a real parse error that causes
 # _load_yaml() to return {} and cmd_get to exit non-zero (key not found).
-echo "key: {broken yaml" > "$HOME/.claude/plugins/altraweb-laravel/laravel-superpowers/config.yaml"
+echo "key: {broken yaml" > "$HOME/.claude/plugins/altraweb-laravel/laravel-vue-superpowers/config.yaml"
 val=$(python3 "$PLUGIN_DIR/lib/config.py" get hook_enabled.banned_token_leak_guard 2>/dev/null || echo "true")
 [ "$val" = "true" ] || { echo "FAIL case 3: expected true, got '$val'"; exit 1; }
 

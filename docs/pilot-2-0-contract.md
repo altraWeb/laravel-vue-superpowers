@@ -1,6 +1,6 @@
 # Pilot 2.0 Contract — Canonical Reference
 
-`laravel-livewire-superpowers` formalizes a 6-Tactic workflow contract (T1-T6) for Laravel sprints. Tactics are tracked in plan-doc markers; some are automated via hooks, others are operator-or-orchestrator-dispatched.
+`laravel-vue-superpowers` formalizes a 6-Tactic workflow contract (T1-T6) for Laravel sprints. Tactics are tracked in plan-doc markers; some are automated via hooks, others are operator-or-orchestrator-dispatched.
 
 ## The 6 Tactics
 
@@ -65,8 +65,8 @@ audit_aggressiveness: every-phase  # brainstorm-only | every-phase | every-commi
 Plus operator-facing:
 
 ```
-/laravel-livewire-superpowers:audit-phase N  → dispatches T1-style audit scoped to Phase N
-/laravel-livewire-superpowers:retro          → end-of-sprint retro report from sprint state
+/laravel-vue-superpowers:audit-phase N  → dispatches T1-style audit scoped to Phase N
+/laravel-vue-superpowers:retro          → end-of-sprint retro report from sprint state
 ```
 
 ## When in doubt

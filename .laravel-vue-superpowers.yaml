@@ -1,4 +1,4 @@
-# laravel-livewire-superpowers per-project config overlay.
+# laravel-vue-superpowers per-project config overlay.
 # Overrides config.defaults.yaml for this development repository.
 #
 # skills/**, docs/*.md, agents/**, commands/**, README.md are added to

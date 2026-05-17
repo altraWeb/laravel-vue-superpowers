@@ -7,7 +7,7 @@ allowed-tools: ["Read", "Bash", "Agent"]
 
 Run a Pilot 2.0 T1 audit (best-practices research + anti-patterns + open questions) scoped to a specific Phase of the active plan-doc.
 
-**Argument:** `N` = phase number to audit. Example: `/laravel-livewire-superpowers:audit-phase 3`.
+**Argument:** `N` = phase number to audit. Example: `/laravel-vue-superpowers:audit-phase 3`.
 
 ## Workflow
 

@@ -1,12 +1,10 @@
-# laravel-livewire-superpowers — plugin default config.
+# laravel-vue-superpowers — plugin default config.
 # This file is the canonical schema source. Every key here is recognized;
 # unknown top-level keys in user/project configs will be rejected.
 #
 # To override these defaults, create one of:
-#   ~/.claude/plugins/altraweb-laravel/laravel-superpowers/config.yaml   (user-global)
-#     ↑ path uses V2 name — intentionally preserved for V2-user config compatibility (V3 design spec §8)
-#   ./.laravel-superpowers.yaml                                          (per-project, takes precedence)
-#     ↑ filename uses V2 name — intentionally preserved for V2-user config compatibility (V3 design spec §8)
+#   ~/.claude/plugins/altraweb-laravel/laravel-vue-superpowers/config.yaml   (user-global)
+#   ./.laravel-vue-superpowers.yaml                                           (per-project, takes precedence)
 # Run: python3 lib/config.py init [--project]   to scaffold either file.
 
 # Pilot contract version. 1 = audits optional, 2 = binding hard-gates.
@@ -39,7 +37,7 @@ hook_enabled:
 # programmatically enforced — the `brainstorm-t1-audit` hook fires on every
 # `superpowers:brainstorming` invocation regardless of this value. For
 # `every-phase` and `every-commit` modes, the agent is expected to read this
-# setting via `/laravel-livewire-superpowers:status` and self-dispatch at the
+# setting via `/laravel-vue-superpowers:status` and self-dispatch at the
 # corresponding boundary. There is no hook that auto-fires at phase or commit
 # boundaries (Claude Code does not emit those events). See
 # docs/audits/2026-05-15-v2-mvp-self-audit.md §"Should-fix S2".

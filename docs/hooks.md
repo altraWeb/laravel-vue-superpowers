@@ -1,8 +1,8 @@
 # Plugin Hooks — Reference
 
-> **Stack:** Laravel + Livewire 4 + Flux Pro v2 + Pest 4. For the Vue 3 + Inertia v2 variant see the planned sibling plugin [`laravel-vue-superpowers`](https://github.com/altraWeb/laravel-vue-superpowers).
+> **Stack:** Laravel + Vue 3 (Composition API) + Inertia v3 + Reka UI + Tailwind CSS 4 + Pest 4. For the Livewire 4 + Flux Pro v2 variant see the sibling plugin [`laravel-livewire-superpowers`](https://github.com/altraWeb/laravel-livewire-superpowers).
 
-`laravel-livewire-superpowers` ships Claude Code hooks that enforce conventions automatically at the right moment in your workflow. Hooks are deterministic — they fire on Claude Code events (`PreToolUse`, `PostToolUse`, `SessionStart`, etc.) and can block, warn, or inject context.
+`laravel-vue-superpowers` ships Claude Code hooks that enforce conventions automatically at the right moment in your workflow. Hooks are deterministic — they fire on Claude Code events (`PreToolUse`, `PostToolUse`, `SessionStart`, etc.) and can block, warn, or inject context.
 
 All hooks read from the plugin config foundation ([`docs/config.md`](config.md)) and can be enabled/disabled per-project via the `hook_enabled.<hook_name>` flag.
 
@@ -51,7 +51,7 @@ The marker is required to include a reason after the colon (operator convention 
 
 **Configuration:**
 
-In `~/.claude/plugins/altraweb-laravel/laravel-superpowers/config.yaml` (user) or `./.laravel-superpowers.yaml` (per-project) — both filenames preserved from V2 for config compatibility:
+In `~/.claude/plugins/altraweb-laravel/laravel-vue-superpowers/config.yaml` (user) or `./.laravel-vue-superpowers.yaml` (per-project):
 
 ```yaml
 hook_enabled:
@@ -364,7 +364,7 @@ Run: `bash tests/test_sprint_state_context_injection_hook.sh` from repo root.
 **Auto-delete opt-in:**
 
 - Env var: `LARAVEL_SUPERPOWERS_AUTO_PRUNE=1`
-- Or config: `stale_branch_sweep.auto_prune: true` in `.laravel-superpowers.yaml` (filename preserved from V2 for config compatibility)
+- Or config: `stale_branch_sweep.auto_prune: true` in `.laravel-vue-superpowers.yaml`
 
 **Skip cases:**
 

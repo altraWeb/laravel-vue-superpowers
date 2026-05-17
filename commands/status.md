@@ -3,7 +3,7 @@ description: Show current sprint state, Pilot 2.0 obligations, hook compliance, 
 allowed-tools: ["Read", "Bash"]
 ---
 
-# laravel-superpowers:status
+# laravel-vue-superpowers:status
 
 Surface the current state of the project's active sprint, Pilot 2.0 obligations, hook compliance, and any pending follow-ups. **Read-only** — never mutate state, never run destructive commands.
 

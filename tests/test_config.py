@@ -37,7 +37,7 @@ def test_user_overlay_overrides_default(cli, user_config_dir):
 
 def test_project_overlay_overrides_user(cli, user_config_dir, project_cwd):
     (user_config_dir / "config.yaml").write_text("pilot_version: 1\n")
-    (project_cwd / ".laravel-superpowers.yaml").write_text("pilot_version: 2\n")
+    (project_cwd / ".laravel-vue-superpowers.yaml").write_text("pilot_version: 2\n")
     result = cli("get", "pilot_version")
     assert result.returncode == 0, result.stderr
     assert result.stdout.strip() == "2"
@@ -45,7 +45,7 @@ def test_project_overlay_overrides_user(cli, user_config_dir, project_cwd):
 
 def test_deep_merge_preserves_uninherited_sibling_keys(cli, project_cwd):
     """Overriding one hook_enabled key must leave the others intact."""
-    (project_cwd / ".laravel-superpowers.yaml").write_text(
+    (project_cwd / ".laravel-vue-superpowers.yaml").write_text(
         "hook_enabled:\n  banned_token_leak_guard: false\n"
     )
     a = cli("get", "hook_enabled.banned_token_leak_guard")
@@ -74,7 +74,7 @@ def test_validate_wrong_type_fails(cli, user_config_dir):
 
 def test_validate_unknown_hook_enabled_subkey_passes(cli, project_cwd):
     """Sub-keys under hook_enabled are open (additionalProperties: boolean)."""
-    (project_cwd / ".laravel-superpowers.yaml").write_text(
+    (project_cwd / ".laravel-vue-superpowers.yaml").write_text(
         "hook_enabled:\n  some_future_hook: true\n"
     )
     result = cli("validate")
@@ -91,7 +91,7 @@ def test_show_outputs_yaml_with_source_comments(cli, user_config_dir):
 
 
 def test_show_marks_project_keys(cli, user_config_dir, project_cwd):
-    (project_cwd / ".laravel-superpowers.yaml").write_text("tier_preference: all\n")
+    (project_cwd / ".laravel-vue-superpowers.yaml").write_text("tier_preference: all\n")
     result = cli("show")
     assert "tier_preference: all  # [project]" in result.stdout
 
@@ -127,17 +127,17 @@ def test_init_force_overwrites(cli, user_config_dir):
 def test_init_project_creates_local_yaml(cli, project_cwd):
     result = cli("init", "--project")
     assert result.returncode == 0
-    assert (project_cwd / ".laravel-superpowers.yaml").exists()
+    assert (project_cwd / ".laravel-vue-superpowers.yaml").exists()
 
 
 def test_doctor_lists_found_configs(cli, user_config_dir, project_cwd):
     (user_config_dir / "config.yaml").write_text("pilot_version: 1\n")
-    (project_cwd / ".laravel-superpowers.yaml").write_text("tier_preference: all\n")
+    (project_cwd / ".laravel-vue-superpowers.yaml").write_text("tier_preference: all\n")
     result = cli("doctor")
     assert result.returncode == 0, result.stderr
     assert "defaults" in result.stdout
     assert str(user_config_dir / "config.yaml") in result.stdout
-    assert str(project_cwd / ".laravel-superpowers.yaml") in result.stdout
+    assert str(project_cwd / ".laravel-vue-superpowers.yaml") in result.stdout
     assert "schema validation: ok" in result.stdout
 
 

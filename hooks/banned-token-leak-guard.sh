@@ -173,7 +173,7 @@ ${findings}
 These references rot fast and look unprofessional in shipped code.
 
 To override per-line, add: \`banned-token-ok: <reason>\` to the line.
-To disable globally, set in .laravel-superpowers.yaml (filename preserved from V2 for config compatibility):
+To disable globally, set in .laravel-vue-superpowers.yaml:
     hook_enabled:
       banned_token_leak_guard: false
 EOF

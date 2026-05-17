@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""laravel-superpowers config helper.
+"""laravel-vue-superpowers config helper.
 
 Reads merged YAML config from defaults + user-global + per-project layers
 and exposes simple CLI verbs for hooks to query.
@@ -83,23 +83,20 @@ def _format(value) -> str:
 def _user_config_path() -> Path:
     """Return the user-global config path.
 
-    Note: path uses `laravel-superpowers` (the V2 plugin name), not
-    `laravel-livewire-superpowers` (V3 name). This is intentional — preserved
-    across the V3 rename so existing V2 users' configs continue to apply
-    without migration. See V3 design spec Section 8.
+    Path uses the Vue fork plugin name. Vue fork has no V0 users to
+    preserve compat for, so config lives at the canonical
+    plugin-named location.
     """
-    return Path(os.environ["HOME"]) / ".claude" / "plugins" / "altraweb-laravel" / "laravel-superpowers" / "config.yaml"
+    return Path(os.environ["HOME"]) / ".claude" / "plugins" / "altraweb-laravel" / "laravel-vue-superpowers" / "config.yaml"
 
 
 def _project_config_path() -> Path:
     """Return the per-project config path.
 
-    Note: filename uses `.laravel-superpowers.yaml` (the V2 plugin name), not
-    `.laravel-livewire-superpowers.yaml` (V3 name). This is intentional — preserved
-    across the V3 rename so existing V2 users' per-project configs continue to apply
-    without migration. See V3 design spec Section 8.
+    Filename uses the Vue fork plugin name. Vue fork has no V0 users
+    to preserve compat for, so filename matches the plugin name.
     """
-    return Path.cwd() / ".laravel-superpowers.yaml"
+    return Path.cwd() / ".laravel-vue-superpowers.yaml"
 
 
 def _deep_merge(base: dict, overlay: dict) -> dict:
@@ -186,8 +183,8 @@ def _source_of(key: str, defaults: dict, user: dict, project: dict) -> str:
     return "unknown"
 
 
-# SCHEMA_POINTER: URL uses the V3 plugin name (laravel-livewire-superpowers). See V3 design spec Section 8.
-SCHEMA_POINTER = "# yaml-language-server: $schema=https://raw.githubusercontent.com/altraWeb/laravel-livewire-superpowers/main/config.schema.json\n"
+# SCHEMA_POINTER: URL uses the Vue fork plugin name.
+SCHEMA_POINTER = "# yaml-language-server: $schema=https://raw.githubusercontent.com/altraWeb/laravel-vue-superpowers/main/config.schema.json\n"
 
 
 def _init_template() -> str:

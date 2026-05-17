@@ -1,8 +1,8 @@
 # Plugin Agents — Reference
 
-> **Stack:** Laravel + Livewire 4 + Flux Pro v2 + Pest 4. For the Vue 3 + Inertia v2 variant see the planned sibling plugin [`laravel-vue-superpowers`](https://github.com/altraWeb/laravel-vue-superpowers).
+> **Stack:** Laravel + Vue 3 (Composition API) + Inertia v3 + Reka UI + Tailwind CSS 4 + Pest 4. For the Livewire 4 + Flux Pro v2 variant see the sibling plugin [`laravel-livewire-superpowers`](https://github.com/altraWeb/laravel-livewire-superpowers).
 
-`laravel-livewire-superpowers` ships specialized agents you invoke for Laravel-specific tasks. Each agent has a focused scope and runs in its own context.
+`laravel-vue-superpowers` ships specialized agents you invoke for Laravel-specific tasks. Each agent has a focused scope and runs in its own context.
 
 ## Agents
 
@@ -140,7 +140,7 @@ Broadcasting / realtime decision support. Scans `routes/channels.php`, `app/Noti
 
 **Stack:** Laravel + Echo + (Reverb / Pusher / Soketi). Read-only.
 
-**Issue:** [#7](https://github.com/altraWeb/laravel-livewire-superpowers/issues/7)
+**Issue:** [#7](https://github.com/altraWeb/laravel-vue-superpowers/issues/7)
 
 ---
 
@@ -155,7 +155,7 @@ Gate-coverage and dead-permission audit. Cross-references seeded permissions in 
 
 **Stack:** Laravel + spatie/laravel-permission v6+ / v7+. Read-only. Runs `php artisan permission:show` if available.
 
-**Issue:** [#9](https://github.com/altraWeb/laravel-livewire-superpowers/issues/9)
+**Issue:** [#9](https://github.com/altraWeb/laravel-vue-superpowers/issues/9)
 
 ---
 
@@ -170,7 +170,7 @@ Build-vs-buy decision support. Given a feature description, searches Packagist +
 
 **Stack:** Generic Laravel — applies to any version 10+. Heavy web research (WebFetch + WebSearch).
 
-**Issue:** [#12](https://github.com/altraWeb/laravel-livewire-superpowers/issues/12)
+**Issue:** [#12](https://github.com/altraWeb/laravel-vue-superpowers/issues/12)
 
 ---
 
