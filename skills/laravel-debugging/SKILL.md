@@ -310,24 +310,33 @@ Other reserved keys to avoid: `loop`, `errors`, `__env`, `app`, `attributes`, `c
 
 ---
 
-### 3. `BadMethodCallException: Method [hasLoading] does not exist`
+### 3. Fabricated framework API — Inertia or Vue Composition API
 
-**Error signature:** runtime exception on first interaction, naming a `$this->X()` method that "should exist" per the plan-doc but doesn't.
+**Error signature:** runtime exception or type error naming a method or composable that "should exist" per the plan-doc but doesn't — e.g., `useHttp().fetchAll()`, `computeed(...)`, `refrence(...)`.
 
-**Root cause:** fabricated Livewire API. The method name came from a plausible-sounding hallucination, not vendor source. `hasLoading()` does not exist on `Livewire\Component`; loading state is a **frontend concern** in Livewire 4.
+**Root cause:** hallucinated API name. Common forms:
+- Inertia v3 added `useHttp` (was not in v2), but `useHttp().fetchAll()` does not exist — the actual API is `router.visit()` or `useForm()` for mutations.
+- Vue Composition API typos: `computeed` instead of `computed`, `refrence` instead of `ref`.
 
-**Fix:** use the template-side directive:
-```blade
-<button wire:click="save" wire:loading.attr="aria-busy" wire:target="save">Save</button>
-```
-
-**Verification:**
+**Fix for Inertia:** verify the composable exists in the installed package:
 ```bash
-php -r 'echo (new ReflectionClass("Livewire\\Component"))->hasMethod("hasLoading") ? "yes" : "no";'
-# → no
+grep -r "export.*useHttp\|export.*function useHttp" node_modules/@inertiajs/vue3/dist/
 ```
 
-Invoke `laravel-livewire-specialist` agent for thorough API audit.
+Use `useForm` for form submissions and `router.visit` for programmatic navigation — not raw fetch or fabricated helpers.
+
+**Fix for Vue:** check the Composition API import:
+```ts
+// Correct
+import { computed, ref } from 'vue';
+```
+
+**Verification of Inertia v3 surface:**
+```bash
+grep -E "^export (const|function|class)" node_modules/@inertiajs/vue3/dist/index.js | head -20
+```
+
+Invoke `laravel-inertia-specialist` agent for Inertia surface; `laravel-vue3-specialist` for Vue Composition API surface.
 
 ---
 
@@ -394,22 +403,52 @@ Or use `->hasParent()` / `->hasChildren()` patterns if the factory defines them.
 
 ---
 
-### 8. `Property [xxx] not found on component`
+### 8. Vue 3 reactivity gotcha — computed not updating
 
-**Error signature:** Livewire 4 component renders, then on interaction throws an exception saying a public property doesn't exist.
+**Error signature:** "My computed value isn't updating when the underlying ref changes." OR a reactive value silently becomes a plain primitive after destructuring.
 
-**Root cause:** the component template (`*.blade.php` or in-class `render()`) references `$xxx`, but the PHP class has no public `$xxx` property declared.
+**Root cause (a) — reactive destructure loses reactivity:**
 
-**Fix:** declare the property:
-```php
-class MyComponent extends Component
-{
-    public string $xxx = '';
-    // ...
-}
+```ts
+// ❌ WRONG — count is a plain number, not reactive; changes to state.count don't propagate
+const state = reactive({ count: 0 });
+const { count } = state;
 ```
 
-Note: Livewire requires properties to be **public** and **primitive-serializable** (string, int, bool, array of those, Eloquent model, etc.). Private/protected properties are component-internal only.
+**Fix:** use `toRefs` to preserve reactivity:
+```ts
+import { reactive, toRefs } from 'vue';
+const state = reactive({ count: 0 });
+const { count } = toRefs(state);  // count is a Ref — still reactive
+```
+
+**Root cause (b) — refs in arrays don't auto-unwrap:**
+
+```ts
+// ❌ arr[0] is a Ref object, not the number 1
+const arr = [ref(1)];
+console.log(arr[0]);  // Ref<1>
+console.log(arr[0].value);  // 1 ← correct
+```
+
+Refs only auto-unwrap when accessed as properties of a `reactive()` object.
+
+**Root cause (c) — `reactive()` on Maps/Sets is opaque:**
+
+```ts
+// ❌ Map mutations don't trigger reactivity
+const map = reactive(new Map());
+map.set('key', 'value');  // NOT tracked reliably
+```
+
+**Fix:** use `shallowReactive` + explicit reassignment, or convert to a plain object/array:
+```ts
+import { ref } from 'vue';
+const map = ref(new Map());  // ref triggers update on .value reassignment
+map.value = new Map(map.value).set('key', 'value');
+```
+
+Invoke `laravel-vue3-specialist` agent for deep Vue 3 reactivity audit.
 
 ---
 
@@ -449,9 +488,10 @@ For deep stack-specific debugging:
 
 | If RED is in... | Dispatch |
 |---|---|
-| Livewire component | `laravel-livewire-specialist` — reflects on `Livewire\Component` vendor source |
+| Inertia controller / Vue page | `laravel-inertia-specialist` — verifies Inertia v3 API surface in `node_modules/@inertiajs/vue3/dist/` |
+| Vue 3 component / Composition API | `laravel-vue3-specialist` — audits ref/reactive/computed usage, lifecycle cleanup, composable design |
+| Reka UI primitives | `laravel-reka-ui-specialist` — reads `node_modules/reka-ui/dist/` for canonical composition + ARIA contract |
 | Pest test (API misuse) | `laravel-pest-specialist` — reflects on `Pest\Expectation` + browser plugin |
-| Flux Pro v2 Blade | `laravel-flux-pro-specialist` — reads `vendor/livewire/flux-pro/stubs/resources/views/flux/*.blade.php` |
 | Eloquent / architecture | `laravel-architect` — sibling-canon check against `app/Actions/`, `app/Services/` |
 | Multi-component review | `laravel-reviewer` — composes specialist invocations + banned-token sweep |
 

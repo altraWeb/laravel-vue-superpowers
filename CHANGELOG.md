@@ -4,6 +4,27 @@ All notable changes to `laravel-vue-superpowers` are documented here. Format fol
 
 This plugin was cloned from [`altraWeb/laravel-livewire-superpowers@v3.0.0`](https://github.com/altraWeb/laravel-livewire-superpowers/releases/tag/v3.0.0) on 2026-05-17. The pre-clone CHANGELOG is preserved at [`docs/ARCHIVE/CHANGELOG-from-livewire-source.md`](docs/ARCHIVE/CHANGELOG-from-livewire-source.md) for origin trace.
 
+## [1.0.0-alpha.3] — 2026-05-17 — Phase C: Skill Sub-Section Swaps
+
+Phase C swaps the Livewire-flavored sub-sections inside 4 skills with Vue 3 + Inertia v3 + Reka UI equivalents.
+
+### Changed
+
+- `skills/laravel-a11y-specialist/SKILL.md` — rewrote from 7 patterns to 3 (manual): live region for async ops + reduced-motion + audio control. Added "What Reka UI handles" section listing 4 patterns delegated to Reka primitives (modal focus / dropdown keyboard nav / form validation announcements / skip-link).
+- `skills/laravel-code-review/SKILL.md` — §9 Livewire sub-checklist → Inertia + Vue 3 sub-checklist (Inertia::share, useForm, Link, usePoll, Wayfinder routes, listener cleanup); §10 Flux Pro v2 sub-checklist → Reka UI sub-checklist (Root/Trigger/Content composition, controlled/uncontrolled, data-[state=*] modifiers, asChild correctness, Portal usage).
+- `skills/laravel-debugging/SKILL.md` — Top-10 item #3 swap: fabricated Livewire `$this->hasLoading()` → fabricated Inertia `useHttp().fetchAll()` / Vue Composition API typos. Item #8 swap: Livewire properties → Vue 3 reactivity gotchas (reactive destructure, refs in arrays, Maps/Sets).
+- `skills/laravel-tdd/SKILL.md` — Pest-specifics item #3 swap: Livewire test helpers → Inertia `assertInertia` + chainable matchers. Item #8 swap: Volt/Livewire browser patterns → Pest 4 browser plugin + Vue component testing.
+- `README.md` — removed "(adaption in Phase C)" parenthetical from a11y-specialist entry.
+- `.claude-plugin/plugin.json` — version 1.0.0-alpha.2 → 1.0.0-alpha.3.
+
+### Phase Status
+
+Phase C (this alpha) — ✅ shipped 2026-05-17 as v1.0.0-alpha.3.
+
+Phases D-E remain.
+
+---
+
 ## [1.0.0-alpha.2] — 2026-05-17 — Phase B: Specialists + Anti-Pattern Hooks
 
 Phase B swaps the frontend-stack-specific specialists and adds 4 anti-pattern hooks for Vue 3 + Inertia patterns.

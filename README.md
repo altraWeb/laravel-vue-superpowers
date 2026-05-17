@@ -4,7 +4,7 @@ Laravel + **Vue 3 (Composition API)** + **Inertia v3** + **Reka UI** + **Tailwin
 
 > **Stack scope:** This plugin targets the Vue 3 + Inertia v3 + Reka UI stack. For the Livewire 4 + Flux Pro v2 variant, see the sibling plugin [`laravel-livewire-superpowers`](https://github.com/altraWeb/laravel-livewire-superpowers) (v3.0.0+).
 >
-> **Pre-1.0 release:** Currently shipping `v1.0.0-alpha.2` (Phase B: specialists + 4 anti-pattern hooks). Functional today for Vue 3 + Inertia + Reka UI projects. Remaining adaptation (skill sub-sections in Phase C, hook repurpose in Phase D) lands before v1.0.0 stable cut in Phase E.
+> **Pre-1.0 release:** Currently shipping `v1.0.0-alpha.3` (Phase C: skill sub-section swaps). Functional today for Vue 3 + Inertia + Reka UI projects. Remaining adaptation (hook repurpose in Phase D) lands before v1.0.0 stable cut in Phase E.
 
 📍 **[Roadmap](docs/ROADMAP.md)** — see what's planned + tracked GitHub issues
 📊 **[Versions](#versions)** — phase-by-phase release history
@@ -40,7 +40,7 @@ pip3 install --user --break-system-packages pyyaml jsonschema
 - **laravel-tdd** — TDD workflow with Pest 4: factories, HTTP testing, facade faking, Feature vs Unit
 - **laravel-debugging** — Debugging with Laravel-specific tools: Telescope, query logging, queue introspection
 - **laravel-code-review** — Code review checklist: N+1, mass assignment, authorization, validation, security
-- **laravel-a11y-specialist** — WCAG 2.2 + ARIA + reduced-motion patterns for Vue 3 + Reka UI UIs (adaption in Phase C)
+- **laravel-a11y-specialist** — WCAG 2.2 + ARIA + reduced-motion patterns adapted for Vue 3 + Reka UI (3 manual patterns; modal/dropdown/form-validation handled by Reka)
 - **laravel-mr-body-writer** — Canonical MR/PR body generator from sprint state (plan-doc + /status + git history)
 - **laravel-perf-auditor** — Mechanical query-path safety sweep: preventLazyLoading status, N+1 patterns, cache strategy
 
@@ -109,7 +109,8 @@ Run the superpowers skill first for generic structure; run the laravel-vue-super
 
 ## Versions
 
-- **v1.0.0-alpha.2 (2026-05-17) — Phase B: Specialists + Anti-Pattern Hooks** *(current)* — Removed Livewire + Flux Pro specialist agents; added Reka UI, Inertia v3, and Vue 3 Composition API specialists; added 4 PreToolUse anti-pattern hooks for `.vue` / `.ts` files. First functional release for Vue 3 + Inertia v3 + Reka UI workloads.
+- **v1.0.0-alpha.3 (2026-05-17) — Phase C: Skill Sub-Section Swaps** *(current)* — Swapped Livewire-flavored sub-sections in 4 skills with Vue 3 + Inertia v3 + Reka UI equivalents: a11y skill rewritten to 3 manual patterns + Reka-handles section; code-review §9/§10 → Inertia+Vue/Reka UI checklists; debugging items #3/#8 → Inertia API / Vue 3 reactivity gotchas; TDD items #3/#8 → assertInertia matchers / Pest browser + Vue testing.
+- **v1.0.0-alpha.2 (2026-05-17) — Phase B: Specialists + Anti-Pattern Hooks** — Removed Livewire + Flux Pro specialist agents; added Reka UI, Inertia v3, and Vue 3 Composition API specialists; added 4 PreToolUse anti-pattern hooks for `.vue` / `.ts` files. First functional release for Vue 3 + Inertia v3 + Reka UI workloads.
 - **v1.0.0-alpha.1 (2026-05-17) — Phase A: Identity Rename** — Plugin renamed from Livewire clone → laravel-vue-superpowers. Config paths, slash commands, README, docs/banners rebranded for Vue 3 + Inertia v3 + Reka UI + Tailwind 4 + Pest 4 stack. No content adaptation yet — agents/skills/hooks still from Livewire source.
 
 See [CHANGELOG.md](CHANGELOG.md) for full history and [docs/superpowers/specs/2026-05-17-vue-fork-adaptation-design.md](docs/superpowers/specs/2026-05-17-vue-fork-adaptation-design.md) for the 5-phase adaptation roadmap.
