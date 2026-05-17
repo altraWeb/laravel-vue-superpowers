@@ -27,7 +27,7 @@
                 "hooks": [
                     {
                         "type": "command",
-                        "command": "${CLAUDE_PLUGIN_ROOT}/hooks/vendor-source-preflight.sh"
+                        "command": "${CLAUDE_PLUGIN_ROOT}/hooks/inertia-vendor-preflight.sh"
                     },
                     {
                         "type": "command",
@@ -56,7 +56,7 @@
                 "hooks": [
                     {
                         "type": "command",
-                        "command": "${CLAUDE_PLUGIN_ROOT}/hooks/vendor-source-preflight.sh"
+                        "command": "${CLAUDE_PLUGIN_ROOT}/hooks/inertia-vendor-preflight.sh"
                     },
                     {
                         "type": "command",

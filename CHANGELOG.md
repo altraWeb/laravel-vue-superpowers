@@ -4,6 +4,31 @@ All notable changes to `laravel-vue-superpowers` are documented here. Format fol
 
 This plugin was cloned from [`altraWeb/laravel-livewire-superpowers@v3.0.0`](https://github.com/altraWeb/laravel-livewire-superpowers/releases/tag/v3.0.0) on 2026-05-17. The pre-clone CHANGELOG is preserved at [`docs/ARCHIVE/CHANGELOG-from-livewire-source.md`](docs/ARCHIVE/CHANGELOG-from-livewire-source.md) for origin trace.
 
+## [1.0.0-alpha.4] — 2026-05-17 — Phase D: Hook Repurpose
+
+Phase D repurposes the inherited `vendor-source-preflight` hook for Reka UI + Inertia detection (was: Flux Pro v2 + Livewire) and broadens `lang-key-existence-preflight` to also fire on `.vue` files.
+
+### Changed
+
+- `hooks/vendor-source-preflight.sh` → `hooks/inertia-vendor-preflight.sh` (`git mv` + full rewrite). Now detects Reka UI imports + Inertia helpers (useForm, usePage, router, <Link>) in `.vue` file Edit/Write, surfaces `node_modules/reka-ui/dist/`, `node_modules/@inertiajs/vue3/dist/`, and `vendor/inertiajs/inertia-laravel/src/` as canonical source references.
+- `hooks/lang-key-existence-preflight.sh` — file-type filter broadened from `*.blade.php` only to `*.blade.php` OR `*.vue`. Vue templates can call `__()` via Inertia shared translation props.
+- `tests/test_vendor_source_preflight_hook.sh` → `tests/test_inertia_vendor_preflight_hook.sh` (renamed + 5 scenarios rewritten for Reka/Inertia detection).
+- `tests/test_lang_key_existence_preflight_hook.sh` — 1 new scenario for `.vue` file.
+- `hooks/hooks.json` — hook reference renamed (2 occurrences: PreToolUse.Edit + PreToolUse.Write).
+- `config.defaults.yaml` — `hook_enabled.vendor_source_preflight` → `hook_enabled.inertia_vendor_preflight` (default true).
+- `tests/test_config.py` — test renamed to match.
+- `docs/hooks.md` — section heading + body rewritten; lang-key section extended with `.vue` note.
+- `README.md` — hook listing updated.
+- `.claude-plugin/plugin.json` — version 1.0.0-alpha.3 → 1.0.0-alpha.4.
+
+### Phase Status
+
+Phase D (this alpha) — ✅ shipped 2026-05-17 as v1.0.0-alpha.4.
+
+Phase E remains (release polish + v1.0.0 stable cut).
+
+---
+
 ## [1.0.0-alpha.3] — 2026-05-17 — Phase C: Skill Sub-Section Swaps
 
 Phase C swaps the Livewire-flavored sub-sections inside 4 skills with Vue 3 + Inertia v3 + Reka UI equivalents.

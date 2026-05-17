@@ -62,12 +62,20 @@ else
 fi
 
 echo ""
-echo "▶ Test 5: Malformed JSON — silent"
+echo "▶ Test 5: .vue file with __() — applies same key existence check"
+project="$(setup_with_lang)"
+cd "$project"
+out="$(run_hook '{"hook_event_name":"PreToolUse","tool_name":"Edit","tool_input":{"file_path":"'$project'/Page.vue","new_string":"<template><p>{{ __(\"messages.greeting\") }}</p></template>"}}')"
+if [ -z "$out" ]; then assert_pass "Test 5"; else assert_fail "Test 5" "expected silent on existing key in .vue, got: $out"; fi
+cd - >/dev/null
+
+echo ""
+echo "▶ Test 6: Malformed JSON — silent"
 out="$(printf 'not json' | bash "$HOOK" 2>&1 || true)"
 if [ -z "$(echo "$out" | grep -v '^$')" ] 2>/dev/null || [ -z "$out" ]; then
-    assert_pass "Test 5"
+    assert_pass "Test 6"
 else
-    assert_fail "Test 5" "expected silent on malformed JSON, got: $out"
+    assert_fail "Test 6" "expected silent on malformed JSON, got: $out"
 fi
 
 echo ""

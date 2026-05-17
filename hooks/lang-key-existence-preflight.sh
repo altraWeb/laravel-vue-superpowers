@@ -35,7 +35,7 @@ fi
 
 file_path="$(printf '%s' "$input" | jq -r '.tool_input.file_path // empty' 2>/dev/null || true)"
 case "$file_path" in
-    *.blade.php) ;;
+    *.blade.php|*.vue) ;;
     *) exit 0 ;;
 esac
 

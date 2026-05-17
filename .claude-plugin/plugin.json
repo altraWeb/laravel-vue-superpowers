@@ -1,7 +1,7 @@
 {
     "name": "laravel-vue-superpowers",
-    "version": "1.0.0-alpha.3",
-    "description": "Laravel + Vue 3 (Composition API) + Inertia v3 + Reka UI + Tailwind CSS 4 + Pest 4 specialist toolkit for Claude Code. Ships 11 agents, 7 skills, 16 hooks, 3 slash commands with Pilot 2.0 contract enforcement. Phase C shipped (v1.0.0-alpha.3): skill sub-sections swapped for Vue/Inertia/Reka UI equivalents. Phase D (hook repurpose) targets v1.0.0 stable.",
+    "version": "1.0.0-alpha.4",
+    "description": "Laravel + Vue 3 (Composition API) + Inertia v3 + Reka UI + Tailwind CSS 4 + Pest 4 specialist toolkit for Claude Code. Ships 11 agents, 7 skills, 16 hooks, 3 slash commands with Pilot 2.0 contract enforcement. Phase D shipped (v1.0.0-alpha.4): vendor-source-preflight repurposed as inertia-vendor-preflight for Reka UI + Inertia detection. Phase E (release polish) targets v1.0.0 stable.",
     "author": {
         "name": "altraWeb"
     },

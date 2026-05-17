@@ -453,42 +453,42 @@ Run: `bash tests/test_pilot_2_contract_enforcer_hook.sh` from repo root.
 
 ---
 
-### `vendor-source-preflight`
+### `inertia-vendor-preflight`
 
 **Event:** `PreToolUse` on `Edit` AND `Write`.
 
-**What it does:** when the target file ends in `.blade.php` and the new content contains `<flux:*>` or `wire:*` directives, emits `additionalContext` surfacing the canonical Flux Pro v2 stub paths and/or Livewire source paths for reference before the edit lands.
+**What it does:** when the target file ends in `.vue` and the new content contains Reka UI imports (`from "reka-ui"`) OR Inertia helper usage (`useForm`, `usePage`, `router.*`, or `from "@inertiajs/vue3"`), emits `additionalContext` surfacing the canonical Reka UI and Inertia vendor source paths for reference before the edit lands.
 
-**Why:** a common Block-1H bug class: writing Blade that uses a Flux component or Livewire directive with slightly wrong API (wrong attribute names, deprecated props, removed slots) because the agent composed from memory rather than reading the vendor stub first. Surfacing the stubs at edit-time costs zero tokens if the agent already knows them, and saves a round-trip + revert if it doesn't.
+**Why:** writing Vue components that use Reka UI primitives or Inertia helpers with slightly wrong API (wrong slot names, removed options, deprecated helper signatures) because the agent composed from memory rather than reading the vendor source first. Surfacing the source paths at edit-time costs zero tokens if the agent already knows them, and saves a round-trip + revert if it doesn't.
 
-**Flux stub paths surfaced:** `vendor/livewire/flux-pro/stubs/resources/views/flux/` — including `button/index.blade.php`, `field/`, `modal/`, `tooltip/`, `editor/`.
+**Reka UI source paths surfaced:** `node_modules/reka-ui/dist/` — common primitives: `dialog/`, `dropdown-menu/`, `popover/`, `form/`, `select/`, `combobox/`.
 
-**Livewire source paths surfaced:** `vendor/livewire/livewire/src/Component.php` + `vendor/livewire/livewire/src/Features/` — covering `wire:click`, `wire:model`, `wire:loading`, `wire:navigate`, `wire:ignore`, `wire:target`.
+**Inertia Vue 3 source paths surfaced:** `node_modules/@inertiajs/vue3/dist/` (key helpers: `useForm`, `usePage`, `router`, `<Link>`, `<Head>`, `usePoll`, `useHttp`) and `vendor/inertiajs/inertia-laravel/src/` (Laravel-side: `Inertia::render`, `Inertia::share`, `Inertia::defer`, `Inertia::lazy`).
 
 **Skip cases:**
 
-- `hook_enabled.vendor_source_preflight: false` in config
-- File path does not end in `.blade.php`
-- Content has no `<flux:*>` or `wire:*` directives
+- `hook_enabled.inertia_vendor_preflight: false` in config
+- File path does not end in `.vue`
+- Content has no Reka UI import AND no Inertia helper usage
 - Malformed JSON input — silent
 
 **Configuration:**
 
 ```yaml
 hook_enabled:
-  vendor_source_preflight: true    # set to false to disable
+  inertia_vendor_preflight: true    # set to false to disable
 ```
 
 **Failure mode:** non-blocking. Hook only injects context; it never blocks an edit. Malformed JSON or missing `jq` → silent exit 0.
 
-**Test evidence:** ships with `tests/test_vendor_source_preflight_hook.sh` — 5 scenarios:
-1. Edit `.blade.php` with `<flux:button>` — surfaces Flux stub paths ✅
-2. Write `.blade.php` with `wire:model` — surfaces Livewire source paths ✅
-3. Edit `.blade.php` without flux/wire directives — silent ✅
-4. Edit non-blade file with flux text — silent ✅
+**Test evidence:** ships with `tests/test_inertia_vendor_preflight_hook.sh` — 5 scenarios:
+1. Edit `.vue` with Reka UI import — surfaces Reka source paths ✅
+2. Edit `.vue` with `useForm` / `@inertiajs/vue3` import — surfaces Inertia source paths ✅
+3. Edit `.vue` without Reka or Inertia helpers — silent ✅
+4. Edit non-`.vue` file with Reka import — silent ✅
 5. Malformed JSON — silent ✅
 
-Run: `bash tests/test_vendor_source_preflight_hook.sh` from repo root.
+Run: `bash tests/test_inertia_vendor_preflight_hook.sh` from repo root.
 
 ---
 
@@ -507,7 +507,7 @@ Run: `bash tests/test_vendor_source_preflight_hook.sh` from repo root.
 **Skip cases:**
 
 - `hook_enabled.lang_key_existence_preflight: false` in config
-- File path does not end in `.blade.php`
+- File path does not end in `.blade.php` or `.vue` (hook fires on both — Vue templates can call `__()` via Inertia shared translation props)
 - No `__()` or `@lang()` calls in the content
 - No `lang/` directory found in the project tree
 - Malformed JSON input — silent
@@ -521,12 +521,13 @@ hook_enabled:
 
 **Failure mode:** non-blocking. Never blocks an edit. Malformed JSON or missing `jq` → silent exit 0. Key check is heuristic (grep-based, not PHP-array-aware) — may miss nested array keys, but never false-blocks.
 
-**Test evidence:** ships with `tests/test_lang_key_existence_preflight_hook.sh` — 5 scenarios:
+**Test evidence:** ships with `tests/test_lang_key_existence_preflight_hook.sh` — 6 scenarios:
 1. Edit blade with `__('messages.greeting')` existing key — silent ✅
 2. Edit blade with `__('messages.missing')` unknown key — warns with key name ✅
 3. Edit blade without `__()` / `@lang()` — silent ✅
 4. Edit non-blade file with `__()` — silent ✅
-5. Malformed JSON — silent ✅
+5. Edit `.vue` file with `__('messages.greeting')` existing key — silent ✅
+6. Malformed JSON — silent ✅
 
 Run: `bash tests/test_lang_key_existence_preflight_hook.sh` from repo root.
 
