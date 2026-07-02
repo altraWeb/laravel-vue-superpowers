@@ -1,11 +1,11 @@
 ---
-description: Show current sprint state, Pilot 2.0 obligations, hook compliance, and open follow-ups for the active Laravel project. Read-only.
+description: Show current branch/sprint state, hook compliance, and open follow-ups for the active Laravel project. Read-only.
 allowed-tools: ["Read", "Bash"]
 ---
 
 # laravel-vue-superpowers:status
 
-Surface the current state of the project's active sprint, Pilot 2.0 obligations, hook compliance, and any pending follow-ups. **Read-only** — never mutate state, never run destructive commands.
+Surface the current state of the project's active branch, hook compliance, and any pending follow-ups. **Read-only** — never mutate state, never run destructive commands.
 
 Target response time: ≤2 seconds. Use only fast commands (git porcelain, file reads, grep). No network calls beyond a single `gh pr view` if needed for protected-branch state.
 
@@ -40,19 +40,7 @@ If multiple, pick the most recently modified. If none, pick the most recently mo
 
 If no `docs/plans/` directory exists, note "no active plan detected".
 
-### Step 3: Detect Pilot 2.0 obligations
-
-Read the active plan-doc and look for:
-
-- **T1 (Phase-Start Agent-Audit):** any `## Phase N` section that hasn't had a parallel `laravel-best-practices` Agent dispatched. Check `docs/superpowers/audits/` for a matching audit file by date or topic.
-- **T3 (Per-Commit Code Review):** if commits exist on the branch, check whether `laravel-reviewer` was invoked between commits (heuristic: look for review-evidence in plan-doc Tasks marked "T3").
-- **T4 (Pre-Test-Write Specialist Audit):** if test-write tasks pending, check if `laravel-pest-specialist` was invoked. Plan-doc Tasks marked "T4".
-- **T5 (Pre-Push Banned-Token Sweep):** the `banned-token-leak-guard` hook covers this automatically per commit. Note: "automated".
-- **T6 (Pre-Push Deferred-Items Check):** the `anti-silent-deferral` hook covers this. Note: "automated".
-
-Detection is **heuristic** — don't deep-grep, just check for obvious presence/absence of marker tasks in the plan-doc.
-
-### Step 4: Detect hook compliance (config-driven)
+### Step 3: Detect hook compliance (config-driven)
 
 Run:
 
@@ -66,33 +54,25 @@ Read the `hook_enabled` block. For each hook, emit one of:
 
 If the helper crashes / config helper not available, note: "config unavailable — hook states unknown".
 
-### Step 5: Detect open obligations
+### Step 4: Detect open obligations
 
-- `docs/plans/*.md` deferred-items sections: count any `## Phase N — Deferred Items` blocks that aren't `**None — all tasks completed**` AND have at least one bullet without an issue-link `#N` reference. (Same logic as `anti-silent-deferral` hook.)
+- `docs/plans/*.md` deferred-items sections: count any `## Phase N — Deferred Items` blocks that aren't `**None — all tasks completed**` AND have at least one bullet without an issue-link `#N` reference. (Same logic as the `anti-silent-deferral` hook.)
 - Filed follow-up issues: not directly queryable from a slash command (would need network); skip this line or emit "TODO: query gh/glab for open issues" if time permits.
 - Branch state vs origin: `git for-each-ref --format='%(upstream:track)' refs/heads/$(git symbolic-ref --short HEAD)` to detect ahead/behind upstream.
 
-### Step 6: Emit the status panel
+### Step 5: Emit the status panel
 
 Format (markdown — Claude Code renders it cleanly):
 
 ```
 ## laravel-vue-superpowers status
 
-**Sprint:** <title from plan-doc> (branch `<current-branch>`)
+**Branch:** `<current-branch>` (<title from plan-doc, if any>)
 **Last commit:** <sha> <subject>
 **Branch state:** <ahead/behind main + working tree status>
 
 **Active plan:** `docs/plans/<filename>.md`
 **Phase progress:** <current-phase>/<phase-count>
-
-### Pilot 2.0 contract status
-
-- <✓ / ⏸ / N/A> T1 — Phase-Start Agent-Audit dispatched
-- <✓ / ⏸ / N/A> T3 — Per-commit code review
-- <✓ / ⏸ / N/A> T4 — Pre-test-write specialist audit
-- ✓ T5 — Banned-token sweep (automated via hook)
-- ✓ T6 — Deferred-items check (automated via hook)
 
 ### Hook compliance
 
@@ -105,13 +85,12 @@ Format (markdown — Claude Code renders it cleanly):
 ### Open obligations
 
 - <list of uncaptured deferrals OR "none" line>
-- <pending T1/T3/T4 tasks OR "all current">
 
 ### Specialist agents
 
-5 agents available: `laravel-livewire-specialist`, `laravel-pest-specialist`, `laravel-flux-pro-specialist`, `laravel-architect`, `laravel-reviewer`.
+10 agents available: `laravel-best-practices`, `laravel-architect`, `laravel-pest-specialist`, `laravel-inertia-specialist`, `laravel-vue3-specialist`, `laravel-reka-ui-specialist`, `laravel-echo-reverb-specialist`, `laravel-scout-meilisearch-specialist`, `spatie-permission-auditor`, `laravel-package-evaluator`.
 
-Invoke via Task tool when the current phase touches the corresponding stack layer.
+Invoke via the Agent tool when the current phase touches the corresponding stack layer. See `docs/agents.md` §"When to route to which specialist" for the task-type → agent mapping.
 ```
 
 ## Important behaviors

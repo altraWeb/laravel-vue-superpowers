@@ -3,7 +3,7 @@
 #
 # skills/**, docs/*.md, agents/**, commands/**, README.md are added to
 # exception_paths because these are plugin-internal documentation files that
-# legitimately reference terms like "Pilot 2.0", phase names, etc.
+# legitimately reference terms like phase names, sprint terms, etc.
 # Without this, the banned-token-leak-guard blocks commits to these files.
 banned_tokens:
   exception_paths:

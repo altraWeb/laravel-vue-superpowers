@@ -129,31 +129,6 @@
 
 ---
 
-### `laravel-reviewer`
-
-**Use when:** completing a feature, reviewing code, or preparing for merge in a Laravel project. Wraps the existing `laravel-code-review` skill (reads it at runtime as checklist scaffold) and adds tool-based evidence verification (grep, find, Read, `php artisan` read-only commands). Every finding cites `file:line`. **Composes specialist agents** — when Livewire/Flux/Pest/architectural code is in scope, recommends calling the corresponding specialist agent rather than re-implementing their checks.
-
-**The 6-step workflow:**
-
-1. **Pre-flight** — confirms Laravel project, reads the `laravel-code-review` skill content (or falls back to embedded checklist if missing).
-2. **Stack Detection** — scans input for `<flux:*>` / `wire:*` / Pest / Eloquent triggers and records specialist recommendations.
-3. **Core Review with Evidence** — walks the skill's checklist, runs grep/find/`php artisan route:list`/Read for each check; every finding is grounded in actual repo state.
-4. **Banned-Token Sweep** (default) — greps touched files for `Phase N`, `Sprint N`, `MR !N`, dated refs, etc. Exception paths: `docs/plans/**`, `docs/superpowers/**`, `CHANGELOG.md`.
-5. **Sibling-Canon Verification** — before flagging a pattern as wrong, checks if the project consistently uses it (defers to project convention over generic best-practice).
-6. **Output** — grouped by **Blocker / Should-fix / Nice-to-have** (matches skill convention, distinct from critical/important/minor of #1-#4), with Specialist Recommendations + Verdict.
-
-**Output:** structured markdown audit report. Every finding includes Where (`file:line`), Evidence (grep output or file excerpt), Project canon reference, and concrete suggested fix.
-
-**Tools:** Read, Bash (grep/find/`php artisan`), WebFetch, WebSearch.
-
-**Required:** Laravel project. Falls back to embedded checklist if `skills/laravel-code-review/SKILL.md` is missing.
-
-**Composability:** when stack-specific code is detected, the reviewer recommends running the corresponding specialist agent — never re-implements their checks. This keeps the reviewer thin and lets specialists own their depth.
-
-**Smoke-test evidence:** See [`superpowers/test-evidence/2026-05-15-reviewer-smoke-*.md`](superpowers/test-evidence/) for captured outputs covering a multi-issue PR (3 blockers + 4 should-fix + 4 specialist recommendations), a clean PR (0 issues, ready to merge), and a non-Laravel (Node.js Express) fail-clean case.
-
----
-
 ### `laravel-echo-reverb-specialist`
 
 Broadcasting / realtime decision support. Scans `routes/channels.php`, `app/Notifications/`, `app/Events/`, and existing Echo callbacks in `resources/js/` to identify reuse-vs-new-channel opportunities BEFORE the brainstorm proposes a redundant broadcast.
@@ -199,30 +174,4 @@ Build-vs-buy decision support. Given a feature description, searches Packagist +
 
 ---
 
----
-
-## `laravel-pilot-orchestrator`
-
-**Use when:** starting a new phase, before requesting code review, or when you suspect Pilot 2.0 contract drift. Produces a structured per-phase Tactic status report (T1-T4) and recommends next steps.
-
-**Trigger on:** `pilot status`, `pilot orchestrator`, `check pilot`, `contract status`, or anytime you need a Pilot 2.0 compliance snapshot.
-
-**Contract reference:** `docs/pilot-2-0-contract.md` — reads this file first for the canonical T1-T6 definition.
-
-**Workflow:**
-1. Pre-flight — confirms git repo + contract doc presence
-2. Detects active plan-doc from branch name (`docs/superpowers/plans/<topic>.md`)
-3. Parses all `## Phase N` Tactic Tracking sections → per-phase T1/T2/T3/T4 matrix
-4. Detects uncommitted obligations (open commits without T3 evidence, test files without T4 evidence)
-5. Emits structured markdown report with open obligations + concrete next steps
-6. Optionally dispatches `laravel-reviewer` (T3) or `laravel-pest-specialist` (T4) — always asks before dispatching
-
-**T5 + T6 (automated hooks):** not surfaced unless they failed — enforced continuously by `banned-token-leak-guard` and `anti-silent-deferral`.
-
-**Tools:** Read, Bash.
-
-**UNBOUND behavior:** if the plan-doc has no Tactic Tracking sections, emits `## Pilot 2.0 Status: UNBOUND` with instructions to bind via `docs/pilot-2-0-contract.md`.
-
----
-
-_**V3 Phase E agents shipped.** See [ROADMAP.md](ROADMAP.md) for the broader V3 roadmap._
+_See [ROADMAP.md](ROADMAP.md) for the broader roadmap._
