@@ -174,4 +174,24 @@ Build-vs-buy decision support. Given a feature description, searches Packagist +
 
 ---
 
+### `laravel-scout-meilisearch-specialist`
+
+**Use when:** about to write or edit a Searchable model, its `shouldBeSearchable()` / `toSearchableArray()` / `searchableAs()`, Meilisearch index-settings, or a `Model::search(...)` query and its tests. Catches the quiet, high-cost Scout bugs that don't surface until data leaks or an index goes stale.
+
+**The 5 audit checks:**
+
+1. **`shouldBeSearchable()` guard-blindness** — flags a `runningUnitTests()`/env short-circuit that leaves the real index gate untested in-suite (a `--covered-only` mutation run silently skips everything past it).
+2. **Gate-parity across Searchable models** — when a privacy/visibility opt-out exists, verifies EVERY Searchable model that exposes the same subject conjoins it (real catch: an opt-out kept a user's albums out of search but not their own handle document).
+3. **Index-time vs query-time gate separation** — CollectionEngine-based tests exercise the query/controller layer but never route writes through `shouldBeSearchable()`; verifies both a query-layer test AND a dedicated index-gate test exist.
+4. **Meilisearch index-settings correctness** — `where()`/`orderBy()` attributes must be in `filterableAttributes`/`sortableAttributes` or Meilisearch rejects the query at runtime.
+5. **Post-deploy indexing hygiene** — a changed `toSearchableArray()`/index-settings/gate needs a `scout:import` (or `scout:flush`) note; newly-restricted documents linger in the index until re-indexed.
+
+**Output:** structured markdown audit report (Blocker / Should-fix / Nice-to-have) with `file:line` citations, a gate-parity matrix, and the exact re-index commands.
+
+**Tools:** Read, Bash, WebFetch, WebSearch.
+
+**Required:** `laravel/scout` in composer.json + at least one Searchable model. Verifies via `vendor/laravel/scout/src/` + the project's `config/scout.php`. Meilisearch index-settings checks are N/A on other drivers.
+
+---
+
 _See [ROADMAP.md](ROADMAP.md) for the broader roadmap._
