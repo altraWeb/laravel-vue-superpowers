@@ -144,7 +144,7 @@ Each check runs only if input contains triggers. Absent triggers → `N/A — no
 **Procedure:**
 
 1. **Uncached expensive computed values:**
-   - Livewire computed `public function getTotalAttribute() { return Order::sum('total'); }` called on every render → recommend `#[Computed(cache: true)]` (Livewire 4+) or `cache()->remember()`
+   - An aggregate re-run on every request — e.g. a controller computing `Order::sum('total')` on each `Inertia::render`, or a model accessor (`getTotalAttribute()`) that hits an aggregate query per access → recommend `cache()->remember(...)` (or `Cache::flexible()` for a stale-while-revalidate window)
 2. **`count()` in render loops:**
    - `@if ($posts->where('published', true)->count() > 0)` in a Blade loop → pull into a variable or use `withCount`
 3. **`exists()` vs `count()` for boolean:**
@@ -196,7 +196,7 @@ Emit ONE markdown report:
 **Laravel version:** <from composer.json>
 **Project profile:**
 - Architectural patterns: <Actions / Services / both / neither + counts>
-- Validation: <FormRequests / Livewire rules() / mixed>
+- Validation: <FormRequests / inline validate() / mixed>
 - DTOs: <LaravelData / inline arrays / none>
 - preventLazyLoading: <enabled at <path:line> / not enabled>
 

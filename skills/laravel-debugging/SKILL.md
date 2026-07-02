@@ -273,7 +273,7 @@ Telescope setup and query debugging → `references/telescope-guide.md`
 
 ---
 
-## Top-10 Pest 4 / Livewire 4 / Flux Pro v2 RED Recipes
+## Top-10 Pest 4 / Inertia v3 / Vue 3 RED Recipes
 
 When you hit a RED in a Pest 4 test for one of these stack-specific symptoms, this table maps **error signature → root cause → concrete fix**. Use it AFTER you've confirmed the symptom (RCA discipline still applies — these are pattern-matching shortcuts, not skip-the-investigation excuses).
 
@@ -471,7 +471,7 @@ If `no`, add the key to `lang/de/messages.php` (or wherever your translation fil
 
 **Error signature:** `assertVisible('@my-button')` fails intermittently; CI flake; the element IS in the DOM when you check manually.
 
-**Root cause:** the element appears asynchronously (Livewire morph, Alpine init, AJAX response), but the assertion ran before it materialized. Manual `->wait(1)` is a smell — Pest 4 already has a **5-second implicit timeout** on `assertVisible`/`assertPresent`/`assertSee`/`assertText`/`assertAttribute`.
+**Root cause:** the element appears asynchronously (Inertia partial reload, Vue `<Transition>` enter, AJAX response), but the assertion ran before it materialized. Manual `->wait(1)` is a smell — Pest 4 already has a **5-second implicit timeout** on `assertVisible`/`assertPresent`/`assertSee`/`assertText`/`assertAttribute`.
 
 **Fix:**
 - Remove `->wait(N)` calls
@@ -493,5 +493,6 @@ For deep stack-specific debugging:
 | Reka UI primitives | `laravel-reka-ui-specialist` — reads `node_modules/reka-ui/dist/` for canonical composition + ARIA contract |
 | Pest test (API misuse) | `laravel-pest-specialist` — reflects on `Pest\Expectation` + browser plugin |
 | Eloquent / architecture | `laravel-architect` — sibling-canon check against `app/Actions/`, `app/Services/` |
-| Multi-component review | `laravel-reviewer` — composes specialist invocations + banned-token sweep |
+| Search / indexing | `laravel-scout-meilisearch-specialist` — verifies Searchable gate parity + `shouldBeSearchable()` test coverage |
+| Authorization coverage | `spatie-permission-auditor` — seeded-permission vs check-site cross-reference |
 

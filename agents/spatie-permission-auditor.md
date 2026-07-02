@@ -70,8 +70,8 @@ grep -rEn "(\\\$user->can|Gate::allows|Gate::denies|Auth::user\(\)->can)\([\"'][
 # Middleware can: directive
 grep -rEn "middleware\([\"']can:[^\"']+[\"']\)|->can\([\"'][^\"']+[\"']\)" routes/ app/Http/ 2>/dev/null | head -30
 
-# Authorize calls
-grep -rEn "\\\$this->authorize\([\"'][^\"']+[\"']" app/Http/Controllers/ app/Livewire/ 2>/dev/null | head -30
+# Authorize calls (controllers + form requests + actions)
+grep -rEn "\\\$this->authorize\([\"'][^\"']+[\"']" app/Http/Controllers/ app/Http/Requests/ app/Actions/ 2>/dev/null | head -30
 
 # Policy ability references
 ls app/Policies/*.php 2>/dev/null && grep -rEn "public function (\w+)\(" app/Policies/ 2>/dev/null | head -30
