@@ -70,7 +70,7 @@ def run_cli(plugin_dir, *args, env_extra=None):
 
 @pytest.fixture
 def cli(plugin_dir):
-    """Returns a callable: cli('get', 'pilot_version') -> CompletedProcess."""
+    """Returns a callable: cli('get', 'visual_companion_default') -> CompletedProcess."""
     def _cli(*args, env_extra=None):
         return run_cli(plugin_dir, *args, env_extra=env_extra)
     return _cli

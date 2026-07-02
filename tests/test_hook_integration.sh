@@ -10,15 +10,15 @@ trap 'rm -rf "$TMP_HOME"' EXIT
 export CLAUDE_PLUGIN_ROOT="$PLUGIN_DIR"
 export HOME="$TMP_HOME"
 
-# Case 1: defaults — pilot_version should be 2
-val=$(python3 "$PLUGIN_DIR/lib/config.py" get pilot_version)
-[ "$val" = "2" ] || { echo "FAIL case 1: expected 2, got '$val'"; exit 1; }
+# Case 1: defaults — visual_companion_default should be "on"
+val=$(python3 "$PLUGIN_DIR/lib/config.py" get visual_companion_default)
+[ "$val" = "on" ] || { echo "FAIL case 1: expected on, got '$val'"; exit 1; }
 
 # Case 2: user overlay
 mkdir -p "$HOME/.claude/plugins/altraweb-laravel/laravel-vue-superpowers"
-echo "pilot_version: 1" > "$HOME/.claude/plugins/altraweb-laravel/laravel-vue-superpowers/config.yaml"
-val=$(python3 "$PLUGIN_DIR/lib/config.py" get pilot_version)
-[ "$val" = "1" ] || { echo "FAIL case 2: expected 1, got '$val'"; exit 1; }
+echo 'visual_companion_default: "ask"' > "$HOME/.claude/plugins/altraweb-laravel/laravel-vue-superpowers/config.yaml"
+val=$(python3 "$PLUGIN_DIR/lib/config.py" get visual_companion_default)
+[ "$val" = "ask" ] || { echo "FAIL case 2: expected ask, got '$val'"; exit 1; }
 
 # Case 3: hook fail-open — broken yaml + key fallback in shell
 # NOTE: ":::broken:::" is valid YAML (PyYAML parses it as a dict key), so

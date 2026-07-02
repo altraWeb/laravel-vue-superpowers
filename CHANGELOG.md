@@ -4,6 +4,87 @@ All notable changes to `laravel-vue-superpowers` are documented here. Format fol
 
 This plugin was cloned from [`altraWeb/laravel-livewire-superpowers@v3.0.0`](https://github.com/altraWeb/laravel-livewire-superpowers/releases/tag/v3.0.0) on 2026-05-17. The pre-clone CHANGELOG is preserved at [`docs/ARCHIVE/CHANGELOG-from-livewire-source.md`](docs/ARCHIVE/CHANGELOG-from-livewire-source.md) for origin trace.
 
+## [2.0.0] — 2026-07-02 — Prune the Pilot 2.0 layer + vendor-source verification everywhere
+
+Major rework (issue #12). Prunes the stale Pilot 2.0 meta-layer, makes the
+vendor-source-verification pattern universal across specialists, adds a
+Scout/Meilisearch specialist, and sharpens every agent's trigger to concrete
+file paths/symbols.
+
+### Removed (BREAKING)
+
+- **Agents:** `laravel-pilot-orchestrator` (referenced Pilot 2.0 Tactic Tracking
+  sections that no longer exist in current plan docs) and `laravel-reviewer`
+  (collided with the orchestrator-reviews-itself process; multi-component review
+  is the orchestrator's job, not a delegated agent).
+- **Hooks:** `pilot-2-contract-enforcer`, `brainstorm-t1-audit`, and
+  `sprint-state-context-injection` (+ their test suites and hooks.json entries).
+- **Docs:** `docs/pilot-2-0-contract.md` (the canonical T1-T6 contract).
+- **Slash commands:** `/audit-phase` and `/retro` (both wholly Pilot-2.0-specific
+  — a T1-audit dispatcher and a Pilot-2.0-contract-compliance report).
+- **Config keys:** `pilot_version`, `audit_aggressiveness`, `tier_preference`, and
+  the `hook_enabled` flags for the three removed hooks — dropped from
+  `config.defaults.yaml` and `config.schema.json`.
+- **Banned-token guard:** dropped the now-dead `Pilot 2\.0` default pattern.
+
+### Added
+
+- **`agents/laravel-scout-meilisearch-specialist.md`** — audits the search-index
+  gate for the highest-cost Scout bugs: `shouldBeSearchable()` guard-blindness (a
+  `runningUnitTests()` short-circuit that leaves the real gate untested in-suite,
+  silently skipped by `--covered-only` mutation), gate-parity across Searchable
+  models (a real production catch: an opt-out kept a user's albums out of search
+  but not their own handle document), index-time-vs-query-time gate separation
+  (CollectionEngine tests never route through the gate), Meilisearch
+  filterable/sortable settings, and post-deploy `scout:import` hygiene. Verifies
+  against `vendor/laravel/scout/src/` + `config/scout.php`.
+
+### Changed
+
+- **Vendor-source verification is now universal.** The pattern that is the
+  plugin's proven differentiator — verify APIs by reading the installed `vendor/`
+  or `node_modules/` source rather than trusting docs or training data (it caught
+  a vacuous variadic `->not->toContain($a, $b)` assertion in production by
+  reflecting on `vendor/pestphp` instead of the docs) — was rolled into the five
+  specialists that lacked it: `laravel-best-practices` (cross-check against the
+  installed source before recommending), `laravel-echo-reverb-specialist`
+  (`vendor/laravel/reverb` + `node_modules/laravel-echo` + `node_modules/pusher-js`),
+  `laravel-reka-ui-specialist` and `laravel-vue3-specialist` (strengthened to the
+  canonical form), and `spatie-permission-auditor`
+  (`vendor/spatie/laravel-permission/src`).
+- **Trigger sharpening across all 10 agents** — descriptions now name concrete
+  file paths and symbols instead of bare topics (mirroring
+  `laravel-pest-specialist`): architect, echo-reverb, spatie-permission-auditor,
+  and vue3 were tightened; pest, reka-ui, inertia, best-practices, and
+  package-evaluator were already sharp.
+- **Drift cleanup** — removed carryover Livewire/Flux references (pointing at
+  non-existent `laravel-livewire-specialist` / `laravel-flux-pro-specialist`)
+  from `laravel-architect`, `spatie-permission-auditor`, the `laravel-debugging`
+  and `laravel-perf-auditor` skills. Legitimate sibling-plugin pointers to
+  `laravel-livewire-superpowers` and version history are retained.
+- **`/status` command** retained but stripped of Pilot 2.0 obligations and its
+  stale specialist roster; now reports branch/plan state, hook compliance, open
+  deferred obligations, and the current 10-agent roster.
+- **`laravel-mr-body-writer` skill** — dropped the Pilot 2.0 contract section
+  from the canonical MR shape.
+- **Config tests** re-anchored on surviving keys (`visual_companion_default`,
+  `teamcity_always`) after the Pilot keys were removed.
+- **Docs** — `docs/agents.md` gains the Scout specialist section + a
+  "When to route to which specialist" mapping; `docs/hooks.md` and
+  `docs/config.md` scrubbed of the removed hooks/keys.
+- **Manifest** — `.claude-plugin/plugin.json` version → `2.0.0`; description
+  rewritten (10 agents / 7 skills / 13 hooks / 1 slash command; dropped the
+  "Full Pilot 2.0 contract enforcement" claim and the `pilot-2.0` keyword).
+
+### Migration
+
+Projects that set `pilot_version`, `audit_aggressiveness`, or `tier_preference`
+in a `.laravel-vue-superpowers.yaml` or user config must remove those keys — the
+schema now rejects unknown top-level keys. The three removed hooks no longer fire;
+delete any `hook_enabled` overrides for them. No data migration required.
+
+---
+
 ## [1.0.0] — 2026-05-17 — V1 Stable
 
 First stable release of the Vue 3 + Inertia v3 + Reka UI + Tailwind CSS 4 + Pest 4 Laravel specialist plugin. Consolidates 4 phased alpha releases (alpha.1 through alpha.4) into v1.0.0.

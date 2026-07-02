@@ -62,7 +62,7 @@ foreach ($posts as $post) {
 
 ### 3. Cache strategy on hot paths
 
-For any controller action or Livewire method that:
+For any controller action or `Inertia::render` path that:
 - Hits the database
 - Is called frequently (e.g., on every page render)
 - Returns data that doesn't change per-request

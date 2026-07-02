@@ -1,6 +1,6 @@
 ---
 name: spatie-permission-auditor
-description: "Use in Laravel projects with Spatie Permission (spatie/laravel-permission v6+/v7+) when reviewing authorization coverage, before shipping a feature with role/permission gates, or as a standalone audit. Cross-references seeded permissions in database/seeders/*RolePermission*Seeder.php vs actual @can()/can()/$user->can()/middleware('can:...')/Policy::class usage. Catches: dead permissions (seeded but never checked), gate gaps (routes without authorize/Policy), typo'd Blade @can() refs, per-role permission matrix drift. Trigger on any 'auth', 'permission', 'role', 'policy', 'gate', 'authorize', 'Spatie' or pre-ship reviews of features with access control."
+description: "Use in Laravel projects with Spatie Permission (spatie/laravel-permission v6+/v7+) when reviewing authorization coverage, before shipping a feature with role/permission gates, or as a standalone audit. Cross-references seeded permissions in database/seeders/*RolePermission*Seeder.php vs actual @can()/can()/$user->can()/middleware('can:...')/Policy::class usage. Catches: dead permissions (seeded but never checked), gate gaps (routes without authorize/Policy), typo'd Blade @can() refs, per-role permission matrix drift. Trigger on edits to database/seeders/*RolePermission*Seeder.php or app/Policies/*, any `@can()` in resources/views, a `$user->can()`/`Gate::allows()`/`middleware('can:...')`/`$this->authorize()` call site, or a route gaining or lacking auth middleware."
 model: inherit
 tools: "Read, Bash"
 maxTurns: 25
@@ -70,8 +70,8 @@ grep -rEn "(\\\$user->can|Gate::allows|Gate::denies|Auth::user\(\)->can)\([\"'][
 # Middleware can: directive
 grep -rEn "middleware\([\"']can:[^\"']+[\"']\)|->can\([\"'][^\"']+[\"']\)" routes/ app/Http/ 2>/dev/null | head -30
 
-# Authorize calls
-grep -rEn "\\\$this->authorize\([\"'][^\"']+[\"']" app/Http/Controllers/ app/Livewire/ 2>/dev/null | head -30
+# Authorize calls (controllers + form requests + actions)
+grep -rEn "\\\$this->authorize\([\"'][^\"']+[\"']" app/Http/Controllers/ app/Http/Requests/ app/Actions/ 2>/dev/null | head -30
 
 # Policy ability references
 ls app/Policies/*.php 2>/dev/null && grep -rEn "public function (\w+)\(" app/Policies/ 2>/dev/null | head -30
@@ -151,6 +151,15 @@ test -f artisan && php artisan permission:show 2>/dev/null | head -50 || echo "(
 ### Nice-to-have
 - Unused Policy ability `BlogPolicy::deletePermanently` — not mapped to any route, not invoked anywhere
 ```
+
+## Source-of-truth verification
+
+Spatie's permission API changes shape across majors (the `HasRoles` trait method set, `permission`/`role` middleware aliases, the `wildcard`/team-scoping options, cache-key layout). Before you assert a method exists or a check form is valid, read the installed package source — it is ground truth over docs that may describe a different major:
+
+- Read `vendor/spatie/laravel-permission/src/` — `Traits/HasRoles.php` + `Traits/HasPermissions.php` for the actual `hasPermissionTo()/can()/assignRole()` surface, `Middleware/` for the registered middleware aliases, and `config/permission.php` (published to the project's `config/permission.php`) for team-mode + cache settings.
+- Confirm the installed major with `grep '"version"' vendor/spatie/laravel-permission/composer.json` (or `composer show spatie/laravel-permission`); this agent targets v6+/v7+ and the middleware alias names differ from v5.
+- Cite the exact `path:line` behind any API-existence claim.
+- If the package is not installed, the pre-flight already SKIPs — never assert Spatie API behavior from memory when `vendor/spatie/laravel-permission/` is absent.
 
 ## When in doubt
 

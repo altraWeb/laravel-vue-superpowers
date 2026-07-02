@@ -27,7 +27,6 @@ All hooks read from the plugin config foundation ([`docs/config.md`](config.md))
 | `Track [0-9]+` | `Track 1` |
 | `Sprint [0-9]+` | `Sprint 12` |
 | `MR !?[0-9]+` | `MR !345` |
-| `Pilot 2\.0` | `Pilot 2.0` |
 | `\b20[0-9]{2}-[0-9]{2}-[0-9]{2}\b` | `2026-05-14` |
 
 **Default exception paths (not scanned):**
@@ -113,7 +112,7 @@ hook_enabled:
 
 **Failure mode:** fail-open — never blocks a legitimate commit due to plugin internals failing.
 
-**Known limitation:** editor-mode `git commit` (no `-m`, no `-F`) cannot be intercepted from a PreToolUse Bash hook (the commit-message edit happens AFTER the Bash invocation returns). Editor-mode commits emit a warning to stderr but pass through; rely on `laravel-reviewer` agent or post-commit hooks to catch the rare editor-mode case.
+**Known limitation:** editor-mode `git commit` (no `-m`, no `-F`) cannot be intercepted from a PreToolUse Bash hook (the commit-message edit happens AFTER the Bash invocation returns). Editor-mode commits emit a warning to stderr but pass through; rely on an orchestrator-run review or post-commit hooks to catch the rare editor-mode case.
 
 **Test evidence:** ships with `tests/test_no_claude_attribution_hook.sh` — 10 scenarios:
 1. Block on `Co-Authored-By: Claude` trailer ✅
@@ -178,7 +177,7 @@ Run: `bash tests/test_teamcity_always_hook.sh` from repo root.
 
 **What it does:** scans the current branch's plan-docs (`docs/plans/*.md` files changed vs `main`) for `## Phase N — Deferred Items` sections. Blocks the push if any section has uncaptured deferrals — free-form prose or bullets without filed-issue refs.
 
-**Why:** Pilot 2.0 contract requires anti-silent-deferral as a hard-gate Task at the end of every plan (Block 1H Task 6.4, Block 1E Task 4.4). Currently relies on operator memory. This hook automates the gate.
+**Why:** deferred work that never gets an issue link silently rots — the plan says "later" and "later" never comes. Enforcing an issue-ref on every deferred item at the end of every plan used to rely on operator memory. This hook automates the gate.
 
 **Section validation:** a section body is **captured** if at least one holds:
 
@@ -282,77 +281,6 @@ Run: `bash tests/test_visual_companion_default_on_hook.sh` from repo root.
 
 ---
 
-### `brainstorm-t1-audit`
-
-**Event:** `PostToolUse` on `Skill` (filters internally to `skill === superpowers:brainstorming`).
-
-**What it does:** when the brainstorming skill is invoked, the hook emits an `additionalContext` reminder + canonical dispatch prompt template directing the parent agent to dispatch `laravel-best-practices` Agent as a **parallel background task** via the Task tool. The audit runs alongside interactive brainstorming and surfaces best-practice research + anti-patterns + open questions.
-
-**Why:** Pilot 2.0 Tactic 1 (Phase-Start Agent-Audit) is canonical at brainstorm-time. Block 1H + 1E both ran a parallel `laravel-best-practices` Agent alongside `superpowers:brainstorming`, surfacing 11+ sources of best-practice research per brainstorm. If the orchestrator forgets, the brainstorm proceeds without audit (Block 1A retro: "super aber nicht ULTRA"). This hook automates the reminder.
-
-**Spec deviation from issue:** issue asks for "auto-dispatch Agent in background". Hooks cannot invoke agents (architecture constraint — hooks are shell scripts; agent dispatch is a harness primitive). Implementation injects a **REMINDER + canonical dispatch prompt template** instead. The parent agent does the actual Task-tool dispatch when it sees the reminder. 80% of spec value at 10% of complexity. Documented in spec §2 + §8.
-
-**Reminder content includes:**
-
-- Pilot 2.0 Tactic 1 context
-- Topic interpolation (from `tool_input.args`, or "detect from conversation context" fallback)
-- Canonical dispatch prompt with:
-  - Stack-detection instruction (composer.json + package.json)
-  - Output expectations: executive summary + per-decision findings (with source-tier citations) + anti-patterns + open questions
-  - Search-discipline: at least 3 sources, always include year filter
-- Archival instruction: `docs/superpowers/audits/YYYY-MM-DD-<short-topic>-audit.md`
-- Opt-out guidance: if skipping, say so explicitly with reason
-
-**Configuration:**
-
-```yaml
-hook_enabled:
-  brainstorm_t1_audit: true            # set to false to disable
-
-audit_aggressiveness: every-phase      # every-phase | every-commit | brainstorm-only
-                                       # all current values include brainstorm-time
-                                       # dispatch — forward-compat for future modes
-```
-
-**Failure mode:** fail-open — silent on any internal failure.
-
-**Test evidence:** ships with `tests/test_brainstorm_t1_audit_hook.sh` — 5 scenarios:
-1. Brainstorming activation emits reminder + Pilot 2.0 + agent name + topic interpolation ✅
-2. Different skill (e.g., `writing-plans`) passthrough — no emit ✅
-3. Empty args emits with "detect from conversation context" fallback ✅
-4. Empty stdin → silent ✅
-5. Malformed JSON → silent ✅
-
-Run: `bash tests/test_brainstorm_t1_audit_hook.sh` from repo root.
-
----
-
----
-
-### `sprint-state-context-injection`
-
-**Event:** `SessionStart`.
-
-**What it does:** detects active sprint via current branch name + optional resume-anchor file + plan-doc, injects a compact sprint-state summary (branch, plan-doc path, current phase, last commit) into the session's system prompt context.
-
-**Why:** zero-touch sprint resume. Eliminates the 15-second manual paste of resume context at the start of every session.
-
-**Detection logic:**
-
-- Active sprint = current branch matches `feat/*`, `chore/*`, `spec/*`, `fix/*`, or `docs/*`
-- Resume anchor (optional): `docs/superpowers/<branch-suffix>-resume.md`
-- Plan doc (optional): `docs/plans/<branch-suffix>.md` or `docs/superpowers/plans/*<branch-suffix>*.md`
-
-**Skip cases:**
-
-- Branch is `main` / `master` / detached HEAD
-- `LARAVEL_SUPERPOWERS_SKIP_AUTO_RESUME` env var is set
-- `hook_enabled.sprint_state_context_injection: false` in config
-
-Run: `bash tests/test_sprint_state_context_injection_hook.sh` from repo root.
-
----
-
 ### `stale-branch-sweep`
 
 **Event:** `SessionStart`.
@@ -395,61 +323,6 @@ Run: `bash tests/test_stale_branch_sweep_hook.sh` from repo root.
 - Commit doesn't touch any `docs/plans/*.md` outside the master-roadmap itself
 
 Run: `bash tests/test_master_roadmap_drift_detector_hook.sh` from repo root.
-
----
-
----
-
-### `pilot-2-contract-enforcer`
-
-**Event:** `PostToolUse` on `Bash` (filters internally to `git commit` and `git push` invocations).
-
-**What it does:** after a `git commit` or `git push`, reads the active plan-doc's `**Pilot 2.0 Tactic Tracking:**` section and warns on incomplete T3 (per-commit code review) or T4 (pre-test-write specialist audit) markers. Behavior scales with `audit_aggressiveness` config.
-
-**Why:** Pilot 2.0 T3/T4 obligations are easy to forget mid-sprint. This hook surfaces open obligations exactly when they're most actionable — right after a commit or push.
-
-**Contract reference:** `docs/pilot-2-0-contract.md` — the canonical T1-T6 definition.
-
-**Modes (audit_aggressiveness config):**
-
-| Mode | Behavior |
-|---|---|
-| `brainstorm-only` | Silent — no enforcement |
-| `every-phase` (default) | Warns on open T3/T4 markers at commit/push time |
-| `every-commit` | Currently warns too (block requires PostToolUse-block support in Claude Code, not universally available) |
-
-**T5 and T6 are NOT in scope** — they are already enforced by `banned-token-leak-guard` and `anti-silent-deferral` respectively.
-
-**Plan-doc tactic tracking format:**
-
-```markdown
-**Pilot 2.0 Tactic Tracking:**
-- [x] T3 reviewed all commits
-- [ ] T4 pending for tests: tests/Feature/FeatureXTest.php
-```
-
-The hook uses `awk` to extract the Tactic Tracking block and `grep` to detect unchecked markers (`- [ ] T3` or `- [ ] T4`).
-
-**Configuration:**
-
-```yaml
-hook_enabled:
-  pilot_2_contract_enforcer: true    # set to false to disable
-
-audit_aggressiveness: every-phase   # brainstorm-only | every-phase | every-commit
-```
-
-**Failure mode:** fail-open — always exits 0. Malformed JSON → silent. No plan-doc with Tactic Tracking → silent.
-
-**Test evidence:** ships with `tests/test_pilot_2_contract_enforcer_hook.sh` — 6 scenarios:
-1. Complete Tactic markers → silent ✅
-2. T3 incomplete, every-phase → warns with T3 reference ✅
-3. Non-PostToolUse event → silent ✅
-4. Bash command that isn't git commit/push → silent ✅
-5. No plan-doc with Tactic Tracking → silent ✅
-6. Malformed JSON → silent ✅
-
-Run: `bash tests/test_pilot_2_contract_enforcer_hook.sh` from repo root.
 
 ---
 

@@ -46,34 +46,32 @@ pip3 install --user --break-system-packages pyyaml jsonschema
 - **laravel-mr-body-writer** — Canonical MR/PR body generator from sprint state (plan-doc + /status + git history)
 - **laravel-perf-auditor** — Mechanical query-path safety sweep: preventLazyLoading status, N+1 patterns, cache strategy
 
-## Agents (11 / 11)
+## Agents (10)
 
-- **laravel-best-practices** — Web research agent for current Laravel best practices (Spatie, Laracasts, Laravel News). Use when asking *"how should I implement X?"* or *"is my current approach still best practice?"*.
-- **laravel-pest-specialist** — Audits Pest 4 tests for variadic-API misuse, browser-plugin smells, view-context anti-patterns, test-location mismatches. Verifies via PHP reflection against the actual Pest vendor source. Use before any test write/edit.
-- **laravel-reka-ui-specialist** — *(Phase B)* Audits Vue components using Reka UI primitives for canonical composition, slot usage, controlled/uncontrolled patterns, Tailwind 4 data-attribute styling, and accessibility-by-default verification. Reads `node_modules/reka-ui/dist/` as ground truth.
-- **laravel-inertia-specialist** — *(Phase B)* Audits Inertia v3 controllers + Vue page components: `Inertia::render` data passing, `useForm` + Precognition, `usePage` shared-data reactivity, partial reloads, deferred props, modal stack, history encryption, polling with `usePoll`.
-- **laravel-vue3-specialist** — *(Phase B)* Audits Vue 3 components for Composition API + `<script setup>` + TypeScript patterns: ref/reactive/computed usage, defineProps TS generics, composable design, lifecycle cleanup, reactive-destructure pitfalls, watch usage.
-- **laravel-architect** — Audits Eloquent + architecture decisions: N+1 detection, migration safety, performance smells, API design. Use before any plan-phase touching models/migrations/queries.
-- **laravel-reviewer** — Evidence-based code review wrapping the `laravel-code-review` skill with tool access. Runs banned-token sweep, sibling-canon verification.
-- **laravel-echo-reverb-specialist** — Broadcasting / realtime decision support. Scans channels, notifications, Echo callbacks to surface reuse-vs-new-channel decisions.
-- **spatie-permission-auditor** — Gate-coverage + dead-permission audit. Cross-references seeded permissions vs actual `@can()` / `can()` / Policy usage.
+Every specialist verifies its API claims against the installed `vendor/` (or `node_modules/`) source — ground truth, not docs or training data.
+
+- **laravel-best-practices** — Web research agent for current Laravel best practices (Spatie, Laracasts, Laravel News), cross-checked against the installed source. Use when asking *"how should I implement X?"* or *"is my current approach still best practice?"*.
+- **laravel-pest-specialist** — Audits Pest 4 tests for variadic-API misuse, browser-plugin smells, view-context anti-patterns, test-location mismatches. Verifies via PHP reflection against `vendor/pestphp/pest/`. Use before any test write/edit.
+- **laravel-architect** — Audits Eloquent + architecture decisions: N+1 detection, migration safety, performance smells, API design. Reads the project's own `app/Actions/`, `app/Services/` for sibling-canon. Use before touching models/migrations/queries.
+- **laravel-inertia-specialist** — Audits Inertia v3 controllers + Vue page components: `Inertia::render` data passing, `useForm` + Precognition, `usePage` shared-data reactivity, partial reloads, deferred props, modal stack, history encryption, polling with `usePoll`. Reads `vendor/inertiajs/inertia-laravel/src/` + `node_modules/@inertiajs/vue3/dist/`.
+- **laravel-vue3-specialist** — Audits Vue 3 components for Composition API + `<script setup>` + TypeScript patterns: ref/reactive/computed usage, defineProps TS generics, composable design, lifecycle cleanup, reactive-destructure pitfalls, watch usage. Reads `node_modules/vue/dist/`.
+- **laravel-reka-ui-specialist** — Audits Vue components using Reka UI primitives for canonical composition, slot usage, controlled/uncontrolled patterns, Tailwind 4 data-attribute styling, and accessibility-by-default verification. Reads `node_modules/reka-ui/dist/` as ground truth.
+- **laravel-echo-reverb-specialist** — Broadcasting / realtime decision support. Scans channels, notifications, Echo callbacks to surface reuse-vs-new-channel decisions. Verifies against `vendor/laravel/reverb` + `node_modules/laravel-echo`.
+- **laravel-scout-meilisearch-specialist** — Search-indexing gate auditor. Catches `shouldBeSearchable()` guard-blindness, missing opt-out gate-parity across Searchable models, and index-time-vs-query-time test gaps. Verifies against `vendor/laravel/scout/src/` + `config/scout.php`.
+- **spatie-permission-auditor** — Gate-coverage + dead-permission audit. Cross-references seeded permissions vs actual `@can()` / `can()` / Policy usage. Verifies against `vendor/spatie/laravel-permission/src/`.
 - **laravel-package-evaluator** — Build-vs-buy decision support. Searches Packagist + GitHub for 2-5 candidates, builds trade-off matrix.
-- **laravel-pilot-orchestrator** — On-demand Pilot 2.0 contract orchestrator. Reads active plan-doc Tactic Tracking sections + git log + audit history, emits per-phase T1-T4 compliance matrix.
 
-See [`docs/agents.md`](docs/agents.md) for the full agent reference.
+See [`docs/agents.md`](docs/agents.md) for the full agent reference and the **"When to route to which specialist"** task-type mapping.
 
-## Hooks (16 / 16)
+## Hooks (13)
 
 - **banned-token-leak-guard** — PreToolUse hook on `git commit` that blocks commits with banned tokens in staged code/comments.
 - **no-claude-attribution** — PreToolUse hook on `git commit`, `gh pr create`, `glab mr create` that blocks any Claude / AI attribution.
 - **teamcity-always** — PreToolUse hook on `php artisan test` that blocks invocations missing `--teamcity`.
 - **anti-silent-deferral** — PreToolUse hook on `git push` that scans plan docs for uncaptured deferred items.
 - **visual-companion-default-on** — PostToolUse hook on brainstorming skill that injects a Visual Companion reminder.
-- **brainstorm-t1-audit** — PostToolUse hook on brainstorming skill that dispatches `laravel-best-practices` audit (Pilot 2.0 T1).
-- **sprint-state-context-injection** — SessionStart hook that injects active sprint state into session context.
 - **stale-branch-sweep** — SessionStart hook that lists local branches whose upstream is gone (post-merge cleanup suggestion).
 - **master-roadmap-drift-detector** — PostToolUse hook on `git commit` touching plan-docs that warns when master-roadmap entry is out of sync.
-- **pilot-2-contract-enforcer** — PostToolUse hook on `git commit`/`git push` that warns on open T3/T4 Pilot 2.0 Tactic Tracking markers.
 - **inertia-vendor-preflight** — *(Phase D)* PreToolUse hook on `Edit`/`Write` of `.vue` files; detects Reka UI imports + Inertia helpers and surfaces `node_modules/reka-ui/dist/`, `node_modules/@inertiajs/vue3/dist/`, and `vendor/inertiajs/inertia-laravel/src/` as canonical source references.
 - **lang-key-existence-preflight** — PreToolUse hook on `Edit`/`Write` of `.blade.php` and `.vue` files with `__()` or `@lang()` that verifies each key exists in `lang/`.
 - **vue-setinterval-cleanup** — *(Phase B)* PreToolUse hook on `Edit`/`Write` of `.vue` files; warns when `setInterval` is used without `onUnmounted` cleanup.
@@ -83,11 +81,9 @@ See [`docs/agents.md`](docs/agents.md) for the full agent reference.
 
 See [`docs/hooks.md`](docs/hooks.md) for the full hook reference.
 
-## Slash Commands (3)
+## Slash Commands (1)
 
-- **`/laravel-vue-superpowers:status`** — Read-only status panel. Surfaces current sprint state, Pilot 2.0 contract obligations, hook compliance, open obligations.
-- **`/laravel-vue-superpowers:audit-phase N`** — Dispatch a Pilot 2.0 T1 audit scoped to Phase N of the active plan-doc.
-- **`/laravel-vue-superpowers:retro`** — Generate an end-of-sprint retrospective report from plan-doc + git history + audit reports.
+- **`/laravel-vue-superpowers:status`** — Read-only status panel. Surfaces current branch/plan state, hook compliance, open deferred obligations, and the available specialist roster.
 
 ## Designed to complement [superpowers](https://github.com/anthropics/claude-plugins-official)
 
@@ -107,11 +103,12 @@ Run the superpowers skill first for generic structure; run the laravel-vue-super
 | Plugin | Stack | Status |
 |---|---|---|
 | [`laravel-livewire-superpowers`](https://github.com/altraWeb/laravel-livewire-superpowers) | Laravel + Livewire 4 + Flux Pro v2 + Pest 4 | Released (v3.0.0+) |
-| `laravel-vue-superpowers` (this repo) | Laravel + Vue 3 + Inertia v3 + Reka UI + Tailwind 4 + Pest 4 | Released (v1.0.0+) |
+| `laravel-vue-superpowers` (this repo) | Laravel + Vue 3 + Inertia v3 + Reka UI + Tailwind 4 + Pest 4 | Released (v2.0.0+) |
 
 ## Versions
 
-- **v1.0.0 (2026-05-17) — V1 Stable** *(current)* — First stable release. Consolidates 4 phased alphas. 11 agents / 7 skills / 16 hooks / 3 slash commands. Full Pilot 2.0 contract enforcement. Self-audit: 0 blockers, 17 shell + 37 Python tests green.
+- **v2.0.0 (2026-07-02) — Prune + Verify** *(current)* — **Breaking.** Removed the stale orchestration/review meta-layer (2 agents, 3 enforcement hooks, its contract doc, the `/audit-phase` + `/retro` commands, and its config keys). Rolled the vendor-source-verification pattern into all specialists. Added laravel-scout-meilisearch-specialist. Sharpened every agent's triggers to concrete file paths/symbols. Now 10 agents / 7 skills / 13 hooks / 1 slash command. See [CHANGELOG.md](CHANGELOG.md) for the full breaking-change list.
+- **v1.0.0 (2026-05-17) — V1 Stable** — First stable release. Consolidates 4 phased alphas. 11 agents / 7 skills / 16 hooks / 3 slash commands. Self-audit: 0 blockers, 17 shell + 37 Python tests green.
 - **v1.0.0-alpha.4 (2026-05-17) — Phase D: Hook Repurpose** — Renamed `vendor-source-preflight` → `inertia-vendor-preflight` (Reka UI + Inertia detection in `.vue` files); broadened `lang-key-existence-preflight` to also fire on `.vue` files.
 - **v1.0.0-alpha.3 (2026-05-17) — Phase C: Skill Sub-Section Swaps** — Swapped Livewire-flavored sub-sections in 4 skills with Vue 3 + Inertia v3 + Reka UI equivalents: a11y skill rewritten to 3 manual patterns + Reka-handles section; code-review §9/§10 → Inertia+Vue/Reka UI checklists; debugging items #3/#8 → Inertia API / Vue 3 reactivity gotchas; TDD items #3/#8 → assertInertia matchers / Pest browser + Vue testing.
 - **v1.0.0-alpha.2 (2026-05-17) — Phase B: Specialists + Anti-Pattern Hooks** — Removed Livewire + Flux Pro specialist agents; added Reka UI, Inertia v3, and Vue 3 Composition API specialists; added 4 PreToolUse anti-pattern hooks for `.vue` / `.ts` files. First functional release for Vue 3 + Inertia v3 + Reka UI workloads.

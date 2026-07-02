@@ -1,6 +1,6 @@
 ---
 name: laravel-mr-body-writer
-description: "Use in Laravel projects when writing a merge-request / pull-request body at sprint close-out. Generates the canonical MR shape (Summary / Decisions / Pilot 2.0 contract / Spec + Plan link / Test plan with file paths + assertion counts / Scope changes / Deferred items / Follow-up issues / Screenshots) from the project's plan-doc, /laravel-vue-superpowers:status output, and git history. Standardizes the 15-minute manual close-out task. Trigger on 'write MR body', 'PR description', 'sprint close-out', 'ready to merge', or before pushing a feature branch."
+description: "Use in Laravel projects when writing a merge-request / pull-request body at sprint close-out. Generates the canonical MR shape (Summary / Decisions / Spec + Plan link / Test plan with file paths + assertion counts / Scope changes / Deferred items / Follow-up issues / Screenshots) from the project's plan-doc, /laravel-vue-superpowers:status output, and git history. Standardizes the 15-minute manual close-out task. Trigger on 'write MR body', 'PR description', 'sprint close-out', 'ready to merge', or before pushing a feature branch."
 ---
 
 # Laravel MR Body Writer
@@ -20,15 +20,6 @@ You are generating the canonical merge-request body for a finished Laravel sprin
 - Use Spatie Permission's existing user-private channel for fan-out (no new channel)
 - Component-based architecture vs trait-based (component won for testability)
 - Pest 4 browser plugin instead of Dusk (already in stack)>
-
-## Pilot 2.0 contract
-
-- T1 Best-Practices Audit: ✓ dispatched <YYYY-MM-DD> (see `docs/superpowers/audits/<YYYY-MM-DD>-<topic>-audit.md`)
-- T2 Visual Companion: ✓ offered, used for layout mockups
-- T3 Per-Commit Review: ✓ all commits reviewed by `laravel-reviewer` agent
-- T4 Pre-Test-Write Audit: ✓ `laravel-pest-specialist` invoked before each test file
-- T5 Banned-Token Sweep: ✓ automated via pre-push hook
-- T6 Deferred-Items Check: ✓ automated via pre-push hook
 
 (Do NOT include memory-file paths — reviewers can't resolve them. Use repo paths only.)
 
@@ -107,7 +98,6 @@ ls docs/superpowers/specs/*.md 2>/dev/null | tail -3
 
 For each `## Phase N` section:
 - Status (complete / in-progress / deferred)
-- Tactic markers (T1/T2/T3/T4) — pull into Pilot 2.0 section
 - Deferred items section (with issue links)
 
 ### Step 3: Count test assertions
@@ -133,13 +123,13 @@ Use the canonical shape above. Fill in concrete content from Steps 1-4. Output a
 
 ## When in doubt
 
-If the plan-doc is missing or the sprint didn't follow Pilot 2.0 explicitly, generate a SIMPLIFIED MR body:
+If the plan-doc is missing or the sprint didn't follow the brainstorm → spec → plan flow explicitly, generate a SIMPLIFIED MR body:
 - Summary
 - What changed (bullet list from git log)
 - Test plan
 - Screenshots
 
-Skip the Pilot 2.0 / Decisions / Spec sections rather than fabricating them. Note in the MR body: `(simplified shape — sprint did not follow Pilot 2.0 contract)`.
+Skip the Decisions / Spec sections rather than fabricating them. Note in the MR body: `(simplified shape — no plan-doc for this branch)`.
 
 ## Anti-patterns
 

@@ -149,6 +149,15 @@ For each Reka primitive, document that the accessibility contract is intact:
 - Reka source references consulted: <list of node_modules/reka-ui/dist/* paths>
 ```
 
+## Source-of-truth verification
+
+Reka UI is pre-1.0-fast-moving: slot prop names, `v-model` key names, `asChild` merge behavior, and which sub-components a primitive requires all shift between minors. Training data is stale here — the installed `dist/` is the only ground truth:
+
+- Read `node_modules/reka-ui/dist/<primitive>/` for the actual exported components, their `props`/`emits`, and the slot-prop shapes before asserting a composition chain or `v-model` key.
+- Confirm the installed version with `grep '"version"' node_modules/reka-ui/package.json` and note it in the report header — a finding valid for 2.x may be wrong for a different minor.
+- Cite the exact `node_modules/reka-ui/dist/<path>` (with the symbol) behind every composition/prop claim — never a claim from memory or the website alone.
+- If `node_modules/reka-ui/` is absent, the pre-flight SKIPs; if only partially present, label unverifiable findings **"verified via docs (reka-ui.com), not installed source"**.
+
 ## When in doubt
 
 If the operator's Reka usage pattern is uncommon (custom asChild wrapping, custom render-prop integration), consult Reka's GitHub examples (`https://github.com/unovue/reka-ui/tree/main/packages/radix-vue/src/`) + the actual primitive source in `node_modules/reka-ui/dist/`. Don't fabricate API claims — read the dist source.

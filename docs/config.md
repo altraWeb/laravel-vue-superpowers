@@ -43,34 +43,24 @@ python3 <plugin>/lib/config.py doctor
 
 ## Keys
 
-### `pilot_version` — integer, one of `1`, `2`, default `2`
-
-Pilot contract version. `1` = audits optional, `2` = audits are binding hard-gates.
-
 ### `hook_enabled.<hook_name>` — boolean, default `true`
 
 Per-hook enable/disable. Set a specific hook to `false` to no-op it without affecting others. Sub-keys here are open — future hooks can opt in without a schema update.
 
 Currently shipped hook names:
-- `banned_token_leak_guard` (#16)
-- `no_claude_attribution` (#17)
-- `teamcity_always` (#18)
-- `anti_silent_deferral` (#19)
-- `brainstorm_t1_audit` (#20)
-- `visual_companion_default_on` (#21)
-
-### `audit_aggressiveness` — string, one of `every-phase | every-commit | brainstorm-only`, default `every-phase`
-
-How aggressively the Tier-1 audit (`laravel-best-practices` dispatch) should fire.
-
-**Important — advisory vs. programmatic enforcement** (clarified in v2.0.1):
-
-- `brainstorm-only` is the only mode with **programmatic enforcement** — the `brainstorm-t1-audit` hook automatically fires on every `superpowers:brainstorming` invocation. The hook fires regardless of this setting's value.
-- `every-phase` and `every-commit` are **advisory metadata** that the orchestrator agent reads from `/laravel-vue-superpowers:status` to decide when to self-dispatch the audit. There is no hook that fires at phase boundaries or per commit — Claude Code does not emit those events.
-
-If you want strict "audit at every commit" enforcement, you'll need to manually dispatch `laravel-best-practices` via the Task tool before each commit. The configuration value advertises your preference; it does not enforce it.
-
-See `docs/audits/2026-05-15-v2-mvp-self-audit.md` §"Should-fix S2" for the rationale.
+- `banned_token_leak_guard`
+- `no_claude_attribution`
+- `teamcity_always`
+- `anti_silent_deferral`
+- `visual_companion_default_on`
+- `stale_branch_sweep`
+- `master_roadmap_drift_detector`
+- `inertia_vendor_preflight`
+- `lang_key_existence_preflight`
+- `vue_setinterval_cleanup`
+- `vue_reactive_destructure`
+- `inertia_link_external_url`
+- `inertia_hardcoded_route`
 
 ### `banned_tokens.project_extras` — list of strings, default `[]`
 
@@ -90,10 +80,6 @@ Paths where banned tokens are tolerated. Defaults include `docs/plans/**`, `docs
 ### `visual_companion_default` — string, one of `on | off | ask`, default `on`
 
 Default for the brainstorming skill's visual companion offer.
-
-### `tier_preference` — string, one of `T1-only | T1+T2 | all`, default `T1+T2`
-
-Which roadmap tiers to surface in auto-suggestions.
 
 ### `teamcity_always` — boolean, default `true`
 
@@ -129,11 +115,4 @@ banned_tokens:
   project_extras:
     - "AcmeCorp"
     - "INT-1234"
-```
-
-### Globally prefer the all-tier suggestion set
-
-```yaml
-# ~/.claude/plugins/altraweb-laravel/laravel-vue-superpowers/config.yaml
-tier_preference: all
 ```

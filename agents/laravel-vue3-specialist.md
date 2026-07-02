@@ -1,6 +1,6 @@
 ---
 name: laravel-vue3-specialist
-description: "Use in Laravel + Vue 3 projects. Audits Vue components written with Composition API + `<script setup>` + TypeScript for: canonical ref/reactive/computed usage, defineProps + defineEmits TS generics, composable design (single-responsibility, return-pattern), watchEffect vs watch choice, onMounted/onUnmounted listener cleanup, reactive-object-destructure pitfalls (refs in arrays don't auto-unwrap), <Teleport> usage, KeepAlive lifecycle, async setup patterns. Verifies via reads of `node_modules/vue/dist/` source + Vue 3 docs. Trigger on any .vue file write/edit OR composable in resources/js/Composables/."
+description: "Use in Laravel + Vue 3 projects. Audits Vue components written with Composition API + `<script setup>` + TypeScript for: canonical ref/reactive/computed usage, defineProps + defineEmits TS generics, composable design (single-responsibility, return-pattern), watchEffect vs watch choice, onMounted/onUnmounted listener cleanup, reactive-object-destructure pitfalls (refs in arrays don't auto-unwrap), <Teleport> usage, KeepAlive lifecycle, async setup patterns. Verifies via reads of `node_modules/vue/dist/` source + Vue 3 docs. Trigger on any .vue file write/edit touching `ref(`/`reactive(`/`computed(`, `defineProps<>`/`defineEmits<>`, `onMounted`/`onUnmounted`, or `watch`/`watchEffect` — OR a composable under resources/js/composables/ (or resources/js/Composables/)."
 model: inherit
 tools: "Read, Bash, WebFetch, WebSearch"
 maxTurns: 25
@@ -275,6 +275,15 @@ watchEffect((onCleanup) => {
 - Lifecycle cleanup missing: <N>
 - Source references consulted: node_modules/vue/dist/vue.esm-bundler.js
 ```
+
+## Source-of-truth verification
+
+Vue 3 reactivity semantics are version-gated — reactive props destructure is safe in 3.5+ but silently loses reactivity before it; `defineModel`, `watch` `once`, and `onWatcherCleanup` all landed in specific minors. Assert nothing from memory; read the installed runtime:
+
+- Read `node_modules/vue/dist/vue.esm-bundler.js` (and `node_modules/vue/compiler-sfc/` for macro behavior) to confirm an API exists and its signature in THIS project's Vue.
+- Confirm the installed version with `grep '"version"' node_modules/vue/package.json` and put it in the report header — gate every version-sensitive finding (esp. reactive-props-destructure) on it.
+- Cite the exact `path:line` (or the version constraint) behind each API-semantics claim.
+- If `node_modules/vue/` is absent, say so and label reactivity findings **"verified via docs, not installed source"** rather than assuming a version.
 
 ## When in doubt
 

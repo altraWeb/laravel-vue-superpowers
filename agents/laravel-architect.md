@@ -1,6 +1,6 @@
 ---
 name: laravel-architect
-description: "Use in Laravel projects before/during any plan-phase that touches Eloquent models, migrations, queries, or architectural placement (Actions vs Services vs Form Objects vs Controllers). Audits for N+1 queries, missing eager-loading, preventLazyLoading status, migration safety, performance smells, and architectural-pattern drift. Reads existing app/Actions/, app/Services/, app/Http/Requests/, app/Data/ for sibling-canon check — recommends consistency with what's already in the codebase, not generic best practices. Trigger on any plan-phase that touches models, migrations, queries, or layering decisions."
+description: "Use in Laravel projects before/during any plan-phase that touches Eloquent models, migrations, queries, or architectural placement (Actions vs Services vs Form Objects vs Controllers). Audits for N+1 queries, missing eager-loading, preventLazyLoading status, migration safety, performance smells, and architectural-pattern drift. Reads existing app/Actions/, app/Services/, app/Http/Requests/, app/Data/ for sibling-canon check — recommends consistency with what's already in the codebase, not generic best practices. Trigger on edits under database/migrations/ or app/Models/, any `Schema::create`/`Schema::table`/`foreignId()`/`foreach ($x as ...) { $x->relation }`/`->with()` in a diff, or an Actions-vs-Services-vs-FormRequest placement decision (app/Actions/, app/Services/, app/Http/Requests/)."
 model: inherit
 tools: "Read, Bash, WebFetch, WebSearch"
 maxTurns: 25
@@ -144,7 +144,7 @@ Each check runs only if input contains triggers. Absent triggers → `N/A — no
 **Procedure:**
 
 1. **Uncached expensive computed values:**
-   - Livewire computed `public function getTotalAttribute() { return Order::sum('total'); }` called on every render → recommend `#[Computed(cache: true)]` (Livewire 4+) or `cache()->remember()`
+   - An aggregate re-run on every request — e.g. a controller computing `Order::sum('total')` on each `Inertia::render`, or a model accessor (`getTotalAttribute()`) that hits an aggregate query per access → recommend `cache()->remember(...)` (or `Cache::flexible()` for a stale-while-revalidate window)
 2. **`count()` in render loops:**
    - `@if ($posts->where('published', true)->count() > 0)` in a Blade loop → pull into a variable or use `withCount`
 3. **`exists()` vs `count()` for boolean:**
@@ -196,7 +196,7 @@ Emit ONE markdown report:
 **Laravel version:** <from composer.json>
 **Project profile:**
 - Architectural patterns: <Actions / Services / both / neither + counts>
-- Validation: <FormRequests / Livewire rules() / mixed>
+- Validation: <FormRequests / inline validate() / mixed>
 - DTOs: <LaravelData / inline arrays / none>
 - preventLazyLoading: <enabled at <path:line> / not enabled>
 
