@@ -85,6 +85,26 @@ After reading your sources, ask yourself:
 
 ---
 
+## Step 3.5: Cross-check against the installed source
+
+Web sources describe whatever version their author ran — a 2024 blog may target Laravel 11 while this project is on 13, or recommend a package API that changed in a later major. Before you commit to a recommendation, verify it against the version THIS project actually installed. The installed source outranks any blog:
+
+```bash
+# What is actually installed?
+grep -E '"laravel/framework"|"php"' composer.json 2>/dev/null
+ls vendor/<vendor>/<package>/src/ 2>/dev/null      # for any package you recommend
+ls node_modules/<pkg>/dist/ 2>/dev/null            # for a JS/Vue recommendation
+```
+
+- If you recommend a framework API (a method, config key, helper), confirm it exists in `vendor/laravel/framework/src/` at the installed version — not just in the docs.
+- If you recommend a package, read its `vendor/<vendor>/<package>/src/` (and `composer show <pkg>` for the installed version) before asserting its API or that it is still maintained-compatible.
+- When the installed version and your top web source disagree, **the installed source wins** — say so explicitly and flag the version gap in the Version Notes section.
+- If `vendor/`/`node_modules/` is absent (research-only, no project context), label the recommendation **"verified via docs, not installed source"** so the caller knows to re-check against their lockfile.
+
+This is the plugin's proven differentiator: reading vendor source instead of trusting docs is what catches the API that "the docs say works" but the installed version doesn't have.
+
+---
+
 ## Step 4: Output Format
 
 Always use this exact structure:
@@ -125,5 +145,7 @@ Always use this exact structure:
 **Flag uncertainty.** If sources conflict or the topic is actively debated, say so explicitly.
 
 **Check recency.** Always note the date of your sources. If the newest content is from 2022, flag it.
+
+**Verify against the installed source, not just docs.** Before recommending an API, confirm it exists in this project's `vendor/`/`node_modules/` at the installed version (Step 3.5). The installed source outranks any blog; when they disagree, say so.
 
 **One topic at a time.** If the question covers multiple independent topics, break them into separate sections.

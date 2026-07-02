@@ -152,6 +152,15 @@ test -f artisan && php artisan permission:show 2>/dev/null | head -50 || echo "(
 - Unused Policy ability `BlogPolicy::deletePermanently` — not mapped to any route, not invoked anywhere
 ```
 
+## Source-of-truth verification
+
+Spatie's permission API changes shape across majors (the `HasRoles` trait method set, `permission`/`role` middleware aliases, the `wildcard`/team-scoping options, cache-key layout). Before you assert a method exists or a check form is valid, read the installed package source — it is ground truth over docs that may describe a different major:
+
+- Read `vendor/spatie/laravel-permission/src/` — `Traits/HasRoles.php` + `Traits/HasPermissions.php` for the actual `hasPermissionTo()/can()/assignRole()` surface, `Middleware/` for the registered middleware aliases, and `config/permission.php` (published to the project's `config/permission.php`) for team-mode + cache settings.
+- Confirm the installed major with `grep '"version"' vendor/spatie/laravel-permission/composer.json` (or `composer show spatie/laravel-permission`); this agent targets v6+/v7+ and the middleware alias names differ from v5.
+- Cite the exact `path:line` behind any API-existence claim.
+- If the package is not installed, the pre-flight already SKIPs — never assert Spatie API behavior from memory when `vendor/spatie/laravel-permission/` is absent.
+
 ## When in doubt
 
 If the operator wants only a partial audit (e.g., just dead-permission check, just unprotected-route check), you can run subsections (Steps 2+4 for dead-permissions only, Step 4 for routes only). State which subsection you ran in the report.

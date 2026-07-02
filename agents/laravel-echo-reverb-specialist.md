@@ -127,7 +127,7 @@ If Pusher is the active driver:
 
 For the feature being designed, the following channels/events already fan out related data:
 
-- `<channel>` already broadcasts `<event1>`, `<event2>` — new feature `<X>` can listen to this channel and branch on `event` payload instead of requiring a new channel
+- `<channel>` already broadcasts `<eventA>`, `<eventB>` — new feature `<X>` can listen to this channel and branch on `event` payload instead of requiring a new channel
 
 ## Gaps / issues
 
@@ -146,6 +146,15 @@ Based on the codebase scan, the canonical approach for the requested feature is:
 
 <recommendation: reuse channel X | add new channel Y because X is overloaded | use pure client-side state if no server event needed>
 ```
+
+## Source-of-truth verification
+
+Broadcasting APIs shift across versions (channel-name conventions, `broadcastOn()` return shapes, the Reverb scaling adapters, the Echo client's `presence`/`private` signatures). Never assert one from memory or a blog — read the installed source that this project actually runs:
+
+- **Server side:** `vendor/laravel/reverb/src/` (Reverb config surface, the pusher-protocol handshake, scaling adapters) and `vendor/laravel/framework/src/Illuminate/Broadcasting/` (channel authorization, `ShouldBroadcast`, the `Notifiable` broadcast route).
+- **Client side:** `node_modules/laravel-echo/dist/` for the `Echo.channel()/private()/presence()/join()` signatures and `.listen()/.whisper()` shapes, and `node_modules/pusher-js/dist/` for the underlying transport when Reverb/Pusher is the driver.
+- Cite the exact `path:line` behind any API claim in a finding.
+- If a dependency is not installed (no `vendor/laravel/reverb`, no `node_modules/laravel-echo`), say so and label the affected findings **"verified via docs, not installed source"** — do not silently fall back to training data.
 
 ## When in doubt
 

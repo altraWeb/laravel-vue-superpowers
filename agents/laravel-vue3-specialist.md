@@ -276,6 +276,15 @@ watchEffect((onCleanup) => {
 - Source references consulted: node_modules/vue/dist/vue.esm-bundler.js
 ```
 
+## Source-of-truth verification
+
+Vue 3 reactivity semantics are version-gated — reactive props destructure is safe in 3.5+ but silently loses reactivity before it; `defineModel`, `watch` `once`, and `onWatcherCleanup` all landed in specific minors. Assert nothing from memory; read the installed runtime:
+
+- Read `node_modules/vue/dist/vue.esm-bundler.js` (and `node_modules/vue/compiler-sfc/` for macro behavior) to confirm an API exists and its signature in THIS project's Vue.
+- Confirm the installed version with `grep '"version"' node_modules/vue/package.json` and put it in the report header — gate every version-sensitive finding (esp. reactive-props-destructure) on it.
+- Cite the exact `path:line` (or the version constraint) behind each API-semantics claim.
+- If `node_modules/vue/` is absent, say so and label reactivity findings **"verified via docs, not installed source"** rather than assuming a version.
+
 ## When in doubt
 
 Read `node_modules/vue/dist/vue.esm-bundler.js` or `node_modules/vue/compiler-sfc/` for actual API signatures. Verify Vue version before asserting reactive props destructure is safe (Vue 3.5+ only). Do not fabricate Vue 3 API semantics.
