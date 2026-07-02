@@ -112,7 +112,7 @@ hook_enabled:
 
 **Failure mode:** fail-open — never blocks a legitimate commit due to plugin internals failing.
 
-**Known limitation:** editor-mode `git commit` (no `-m`, no `-F`) cannot be intercepted from a PreToolUse Bash hook (the commit-message edit happens AFTER the Bash invocation returns). Editor-mode commits emit a warning to stderr but pass through; rely on `laravel-reviewer` agent or post-commit hooks to catch the rare editor-mode case.
+**Known limitation:** editor-mode `git commit` (no `-m`, no `-F`) cannot be intercepted from a PreToolUse Bash hook (the commit-message edit happens AFTER the Bash invocation returns). Editor-mode commits emit a warning to stderr but pass through; rely on an orchestrator-run review or post-commit hooks to catch the rare editor-mode case.
 
 **Test evidence:** ships with `tests/test_no_claude_attribution_hook.sh` — 10 scenarios:
 1. Block on `Co-Authored-By: Claude` trailer ✅

@@ -4,6 +4,25 @@
 
 `laravel-vue-superpowers` ships specialized agents you invoke for Laravel-specific tasks. Each agent has a focused scope and runs in its own context.
 
+## When to route to which specialist
+
+Specialist use should be **structural, not memory-dependent**. An orchestrator should bake this mapping into its plan-execution protocol — when a task step touches a layer below, the matching specialist is dispatched as part of executing that step, not as an afterthought if someone happens to remember. Treat the "when to dispatch" column as a trigger baked into the plan, the same way a test step is.
+
+| When the work touches… | Route to | Dispatch when the plan step… |
+|---|---|---|
+| Migrations, Eloquent models, queries, N+1, layering (Actions/Services) | `laravel-architect` | adds/edits `database/migrations/*` or `app/Models/*`, or decides code placement |
+| Realtime, broadcasting, presence/private channels, notification fan-out | `laravel-echo-reverb-specialist` | touches `routes/channels.php`, a `ShouldBroadcast` event, or an Echo client subscription |
+| Inertia pages, props, shared data, forms, partial reloads | `laravel-inertia-specialist` | edits an `Inertia::render` controller or a `useForm`/`usePage`/`<Link>` page |
+| Vue 3 composition, composables, reactivity, lifecycle | `laravel-vue3-specialist` | writes/edits a `.vue` `<script setup>` or a `resources/js/composables/*` |
+| Reka UI primitives (Dialog, DropdownMenu, Combobox, …) | `laravel-reka-ui-specialist` | composes/edits a component importing from `reka-ui` |
+| Search, indexing, Searchable models, Meilisearch settings | `laravel-scout-meilisearch-specialist` | edits `shouldBeSearchable()`/`toSearchableArray()`, index-settings, or a `Model::search()` + its tests |
+| Authorization coverage, roles, permissions, policies, gates | `spatie-permission-auditor` | changes a `*RolePermission*Seeder`, a Policy, or a route's auth gate |
+| Writing or reviewing Pest tests | `laravel-pest-specialist` | is about to write/edit any test file |
+| Build-vs-buy for a non-trivial feature | `laravel-package-evaluator` | asks "is there a package for X?" / "should we build or buy?" |
+| "What's the current best practice for X?" | `laravel-best-practices` | needs the current, source-verified recommendation for a pattern/decision |
+
+Every specialist verifies its findings against the installed `vendor/` or `node_modules/` source rather than docs or training data — see each agent's "Source-of-truth verification" section.
+
 ## Agents
 
 ### `laravel-best-practices`
