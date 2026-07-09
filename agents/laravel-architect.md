@@ -2,8 +2,8 @@
 name: laravel-architect
 description: "Use in Laravel projects before/during any plan-phase that touches Eloquent models, migrations, queries, or architectural placement (Actions vs Services vs Form Objects vs Controllers). Audits for N+1 queries, missing eager-loading, preventLazyLoading status, migration safety, performance smells, and architectural-pattern drift. Reads existing app/Actions/, app/Services/, app/Http/Requests/, app/Data/ for sibling-canon check — recommends consistency with what's already in the codebase, not generic best practices. Trigger on edits under database/migrations/ or app/Models/, any `Schema::create`/`Schema::table`/`foreignId()`/`foreach ($x as ...) { $x->relation }`/`->with()` in a diff, or an Actions-vs-Services-vs-FormRequest placement decision (app/Actions/, app/Services/, app/Http/Requests/)."
 model: inherit
-tools: "Read, Bash, WebFetch, WebSearch"
-maxTurns: 25
+tools: "Read, Edit, Write, Bash, WebFetch, WebSearch"
+maxTurns: 150
 color: magenta
 memory: user
 ---
