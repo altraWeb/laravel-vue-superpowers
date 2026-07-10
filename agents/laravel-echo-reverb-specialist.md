@@ -3,7 +3,7 @@ name: laravel-echo-reverb-specialist
 description: "Use in Laravel projects with Echo + Reverb (or Echo + Pusher) when designing any realtime feature, broadcasting event, presence/private channel, or notification fan-out. Default-scans routes/channels.php + app/Notifications/ + existing Echo client callbacks to surface reuse-vs-new-channel decisions BEFORE the brainstorm proposes a redundant broadcast. Catches the canonical 'we already have App.Models.User.{id} broadcasting both forum notifications AND private_message_received — sound playback is pure client-side' insight. Trigger on edits to routes/channels.php, an app/Events/* class implementing `ShouldBroadcast` (`broadcastOn()`/`broadcastAs()`), an app/Notifications/* with `broadcast` in its `via()`, or an `Echo.private()`/`Echo.presence()`/`Echo.channel()`/`Echo.join()` call in resources/js."
 model: inherit
 tools: "Read, Edit, Write, Bash"
-maxTurns: 150
+maxTurns: 25
 color: cyan
 memory: user
 ---

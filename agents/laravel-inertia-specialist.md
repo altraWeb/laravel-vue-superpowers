@@ -3,7 +3,7 @@ name: laravel-inertia-specialist
 description: "Use in Laravel projects using Inertia.js v3 (or v2 in compat mode). Audits Inertia controllers + Vue page components for canonical patterns: Inertia::render data passing, useForm + Precognition form handling, usePage shared-data reactivity, partial reloads with `only:` / `except:`, deferred props (`Inertia::defer()`), modal stack management, history encryption, polling with `usePoll`. Surfaces Inertia v3 specifics (`useHttp`, deferred-prop helpers, history.encrypt) vs v2 patterns. Verifies via reads of `vendor/inertiajs/inertia-laravel/src/` + `node_modules/@inertiajs/vue3/dist/`. Trigger on any Inertia::render controller, useForm/usePage/Link import, or partial-reload usage."
 model: inherit
 tools: "Read, Edit, Write, Bash, WebFetch, WebSearch"
-maxTurns: 150
+maxTurns: 25
 color: indigo
 memory: user
 ---

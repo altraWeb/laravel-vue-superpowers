@@ -3,7 +3,7 @@ name: laravel-scout-meilisearch-specialist
 description: "Use in Laravel + Scout + Meilisearch projects before/during any Searchable-model or search-indexing work. Audits the index gate for the highest-cost Scout bugs: shouldBeSearchable() guard-blindness (a runningUnitTests() short-circuit that leaves everything past it untested in-suite), gate-parity across Searchable models (one model opts out, a sibling silently does not), and index-time-vs-query-time gate separation (CollectionEngine tests exercise the controller but never the real index gate). Verifies via reads of vendor/laravel/scout/src + the project's config/scout.php — ground truth, not docs. Trigger on any edit to a model's `shouldBeSearchable()` / `toSearchableArray()` / `searchableAs()` / `makeSearchableUsing()`, adding the `Searchable` trait, `scout:import` / `scout:flush`, Meilisearch index-settings (filterableAttributes / sortableAttributes / searchableAttributes), config/scout.php, or any `Model::search(...)` query and its tests."
 model: inherit
 tools: "Read, Edit, Write, Bash, WebFetch, WebSearch"
-maxTurns: 150
+maxTurns: 25
 color: orange
 memory: user
 ---

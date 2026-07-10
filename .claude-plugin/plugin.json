@@ -1,6 +1,6 @@
 {
     "name": "laravel-vue-superpowers",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "description": "Laravel + Vue 3 (Composition API) + Inertia v3 + Reka UI + Tailwind CSS 4 + Pest 4 + Scout/Meilisearch specialist toolkit for Claude Code. 10 specialist agents, 7 stack-enhanced skills, 13 enforcement & context hooks, 1 slash command. Every specialist verifies APIs against the installed vendor/ (or node_modules/) source — ground truth, not docs.",
     "author": {
         "name": "altraWeb"

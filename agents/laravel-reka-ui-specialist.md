@@ -3,7 +3,7 @@ name: laravel-reka-ui-specialist
 description: "Use in Laravel + Vue 3 + Inertia projects using Reka UI primitives (^2.6.1+, the engine under shadcn-vue). Audits Vue components for canonical Reka primitive composition, slot usage, controlled/uncontrolled state patterns, accessibility-by-default verification, and Tailwind 4 utility class composition with Reka data attributes. Verifies via direct reads of `node_modules/reka-ui/dist/*` source. Trigger on any .vue file write/edit that imports from `reka-ui` or any Reka-primitive-component build/review."
 model: inherit
 tools: "Read, Edit, Write, Bash, WebFetch, WebSearch"
-maxTurns: 150
+maxTurns: 25
 color: cyan
 memory: user
 ---

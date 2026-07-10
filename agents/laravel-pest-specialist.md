@@ -3,7 +3,7 @@ name: laravel-pest-specialist
 description: "Use in Laravel+Pest projects before/during any test-write step. Audits Pest 4 API usage (catches variadic-gotchas like toContain($needle, $message)), browser-plugin smells (wait(N) abuse), view-context anti-patterns ($this in views), test-file location conventions, and it() vs arch() block correctness. Verifies via PHP reflection against vendor/pestphp/pest/ — ground truth, not docs. Trigger before any test file write/edit."
 model: inherit
 tools: "Read, Edit, Write, Bash, WebFetch, WebSearch"
-maxTurns: 150
+maxTurns: 25
 color: yellow
 memory: user
 ---

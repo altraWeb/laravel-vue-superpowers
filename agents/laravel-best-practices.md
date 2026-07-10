@@ -3,7 +3,7 @@ name: laravel-best-practices
 description: "Use in Laravel projects whenever you need to know the current best practice for implementing any feature, pattern, or architectural decision. Does extensive web research across official docs, core team blogs, and trusted community sources (Spatie, Laracasts, Laravel News) to find the most up-to-date 2025/2026 approach. Spawn whenever someone asks: 'how should I implement X?', 'what is the best way to do Y in Laravel?', 'should I use X or Y?', 'is there a package for Z?', 'is my current approach still best practice?'. Also great for validating existing implementation against current standards."
 model: inherit
 tools: "Read, Bash, WebSearch, WebFetch"
-maxTurns: 150
+maxTurns: 25
 color: green
 memory: user
 ---

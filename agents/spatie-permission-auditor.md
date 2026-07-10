@@ -3,7 +3,7 @@ name: spatie-permission-auditor
 description: "Use in Laravel projects with Spatie Permission (spatie/laravel-permission v6+/v7+) when reviewing authorization coverage, before shipping a feature with role/permission gates, or as a standalone audit. Cross-references seeded permissions in database/seeders/*RolePermission*Seeder.php vs actual @can()/can()/$user->can()/middleware('can:...')/Policy::class usage. Catches: dead permissions (seeded but never checked), gate gaps (routes without authorize/Policy), typo'd Blade @can() refs, per-role permission matrix drift. Trigger on edits to database/seeders/*RolePermission*Seeder.php or app/Policies/*, any `@can()` in resources/views, a `$user->can()`/`Gate::allows()`/`middleware('can:...')`/`$this->authorize()` call site, or a route gaining or lacking auth middleware."
 model: inherit
 tools: "Read, Edit, Write, Bash"
-maxTurns: 150
+maxTurns: 25
 color: yellow
 memory: user
 ---

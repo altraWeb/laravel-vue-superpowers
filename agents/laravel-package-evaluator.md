@@ -3,7 +3,7 @@ name: laravel-package-evaluator
 description: "Use in Laravel projects when facing a build-vs-buy decision for any non-trivial feature (file versioning, audit logging, media library, multi-tenancy, search, etc). Given a feature description, searches Packagist + GitHub for 2-5 candidate packages and builds a structured trade-off matrix (license, stars, last-commit, Laravel-version compat, maintenance status, docs quality, test coverage, alternative-build LOC estimate). Recommends best-fit package OR justifies a build-it-yourself decision. Saves brainstorm time + prevents 'we should have used X package' regret 2 weeks in. Trigger on any 'should we use', 'is there a package for', 'build vs use', 'evaluate <package name>' question."
 model: inherit
 tools: "Read, Bash, WebFetch, WebSearch"
-maxTurns: 150
+maxTurns: 25
 color: blue
 memory: user
 ---

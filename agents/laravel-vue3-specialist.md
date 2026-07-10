@@ -3,7 +3,7 @@ name: laravel-vue3-specialist
 description: "Use in Laravel + Vue 3 projects. Audits Vue components written with Composition API + `<script setup>` + TypeScript for: canonical ref/reactive/computed usage, defineProps + defineEmits TS generics, composable design (single-responsibility, return-pattern), watchEffect vs watch choice, onMounted/onUnmounted listener cleanup, reactive-object-destructure pitfalls (refs in arrays don't auto-unwrap), <Teleport> usage, KeepAlive lifecycle, async setup patterns. Verifies via reads of `node_modules/vue/dist/` source + Vue 3 docs. Trigger on any .vue file write/edit touching `ref(`/`reactive(`/`computed(`, `defineProps<>`/`defineEmits<>`, `onMounted`/`onUnmounted`, or `watch`/`watchEffect` — OR a composable under resources/js/composables/ (or resources/js/Composables/)."
 model: inherit
 tools: "Read, Edit, Write, Bash, WebFetch, WebSearch"
-maxTurns: 150
+maxTurns: 25
 color: green
 memory: user
 ---
